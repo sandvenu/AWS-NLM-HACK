@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-01T23-31-execution-leedsv3-01",
+  "team_code": "team07",
+  "unit": "execution",
+  "target": {
+    "metric": "accuracy_rel2pct",
+    "value": 0.6,
+    "direction": ">="
+  },
+  "test_set": "testsets/execution_telemath_synth.jsonl",
+  "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "leeds-telemath-v3",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "d2a00e2584eb8aad2d48a27d9e2c2ccf0d61743e",
+  "declared_at": "2026-11-01T23:31:54+00:00",
+  "note": "Extra comparison: organisers' Leeds TeleMath LoRA v3. Unit target for Track 1 execution: accuracy within 2% relative error >= 0.60 on the frozen 480-item set. This run is expected to FAIL it; it measures the comparison point."
+}
