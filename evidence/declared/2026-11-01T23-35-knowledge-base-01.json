@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-01T23-35-knowledge-base-01",
+  "team_code": "team07",
+  "unit": "knowledge",
+  "target": {
+    "metric": "exact_match",
+    "value": 0.6,
+    "direction": ">="
+  },
+  "test_set": "testsets/knowledge_teleqna.jsonl",
+  "test_set_sha256": "7e15eb4a2dfd14a7bba1fc7c8f83ed80dd789d21fd1094094a0c883c912ebc24",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "none",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "6dbd2de5a144816b03f3714799fad7a0a4372a80",
+  "declared_at": "2026-11-01T23:35:42+00:00",
+  "note": "Baseline: untuned base. Unit target for Track 1 knowledge: exact match on the option letter >= 0.60 on the frozen 500-item TeleQnA set. Expected to FAIL; it measures the comparison point."
+}
