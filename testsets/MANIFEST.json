@@ -1,0 +1,13 @@
+{
+  "files": {
+    "testsets/execution_telemath_synth.jsonl": {
+      "unit": "execution",
+      "sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
+      "items": 480,
+      "source": "team07 seeded generator src/nlm/telemath_gen.py (24 telecom formula families x 20, answers computed in Python)",
+      "licence": "Apache-2.0 (team07 generated, synthetic)",
+      "build": "python -m nlm.telemath_gen --seed 7101 --n 480 --prefix exe --out testsets/execution_telemath_synth.jsonl",
+      "frozen_at": "2026-11-01T23:23:39+00:00"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+# Raw downloads and training data stay out of Git (TeleLogs must never be redistributed).
+data/
+*.zip
+__pycache__/
+.venv/
+*.pyc
+.env
+dev.env
