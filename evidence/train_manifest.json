@@ -1,0 +1,13 @@
+{
+  "file": "data/train/train.jsonl (not committed; s3://bb26-p-team07-data-041915167631-use2/nlm-track1/train/<run_id>/train.jsonl)",
+  "sha256": "13fed274c30dcd0347d5377bfa1c004419b2483fcec4cd99b22a0f0610bef9c7",
+  "rows": 15476,
+  "by_source": {
+    "telemath_gen": 6000,
+    "teleqna": 9476
+  },
+  "exec_seed": 8202,
+  "exec_test_questions_banned": 480,
+  "knowledge_test_items_excluded": true,
+  "build": "python tools/build_train.py --exec-n 6000 --teleqna-pool data/train/teleqna_pool.jsonl"
+}

@@ -14,13 +14,19 @@ Times are UTC. Each gap names the unit it limits.
   (in-distribution with our training generator, see G-05).
 - We did not route around the block. A Lambda that would have pulled HF files from inside AWS was written,
   then not deployed (our own review: it would bypass the network policy). Its IAM role was created and deleted
-  the same minute. Raised with the team lead for a decision.
+  the same minute. Raised with the team lead (see G-02b).
 - Told: team07 lead session, 2026-11-01 ~23:15 UTC.
 
-**G-02: TeleQnA download route (pending decision). Limits: Knowledge.**
-- The proxy blocks `raw.githubusercontent.com/.../TeleQnA.zip`. The same public file (MIT) downloads through
-  `api.github.com/repos/netop-team/TeleQnA/contents/TeleQnA.zip`
-  (sha256 of the zip recorded in DATA.md once used). Awaiting the team's OK before using that copy.
+**G-02: TeleQnA download route. Limits: Knowledge. Resolved.**
+- The proxy blocks `raw.githubusercontent.com/.../TeleQnA.zip`. The same public file (MIT) was downloaded through
+  `api.github.com/repos/netop-team/TeleQnA/contents/TeleQnA.zip`, with the team's OK (2026-11-01 ~23:33 UTC).
+  Zip sha256 `5302f1df9e0e66aafd12b945af518211bd41aa77294b0cac05e4234eaf12b0a5`.
+
+**G-02b: Hugging Face pull from inside AWS not run. Limits: DATA.md completeness (GSMA licences/splits unverified).**
+- 2026-11-01 ~23:38 UTC. The team approved a CPU SageMaker job that pulls public HF metadata/files into
+  `s3://…/nlm-track1/data/raw/` (`tools/hf_pull.py`, `sagemaker/hf_pull_entry.py`). The coding agent's own
+  safety check refused to launch it because the approval was relayed from another session rather than given
+  in its own session. The job is ready to run: `python tools/hf_pull.py --run-id <id>`. Neither unit depends on it.
 
 **G-03: `aws s3 sync` from the organisers' model bucket failed on large objects.**
 - 2026-11-01 23:13 UTC, S3 `GetObjectTagging` on `s3://fyuz-otel-leeds-2026/base-model/otel-llm-1.7b-it/pytorch_model-0000{1,2}-of-00002.bin`
