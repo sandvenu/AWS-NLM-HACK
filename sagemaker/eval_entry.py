@@ -60,6 +60,12 @@ def main():
     model = AutoModelForCausalLM.from_pretrained(model_dir, dtype=torch.bfloat16, attn_implementation="sdpa").to("cuda")
     if adapter_dir and os.listdir(adapter_dir):
         from peft import PeftModel
+        tarball = os.path.join(adapter_dir, "model.tar.gz")
+        if os.path.exists(tarball):  # adapter produced by our own training job
+            import tarfile
+            adapter_dir = "/tmp/adapter"
+            with tarfile.open(tarball) as tar:
+                tar.extractall(adapter_dir)
         root = adapter_dir
         for dirpath, _, files in os.walk(adapter_dir):
             if "adapter_config.json" in files:
