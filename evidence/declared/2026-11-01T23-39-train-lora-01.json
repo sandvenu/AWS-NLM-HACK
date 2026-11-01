@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-01T23-39-train-lora-01",
+  "team_code": "team07",
+  "unit": "training",
+  "target": {
+    "metric": "train_completes",
+    "value": 1.0,
+    "direction": ">="
+  },
+  "test_set": null,
+  "test_set_sha256": null,
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v1",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "4c3a3337cb718446c1a2f126c6cdfe4bfa0684ee",
+  "declared_at": "2026-11-01T23:39:29+00:00",
+  "note": "LoRA SFT (r=32, alpha=64, all-linear, 1 epoch, lr 2e-4, max_seq_len 1024) on data/train/train.jsonl sha256 13fed274c30dcd0347d5377bfa1c004419b2483fcec4cd99b22a0f0610bef9c7 (6000 synthetic execution + 9476 TeleQnA non-test). Produces adapter team07-lora-v1, to be scored by separately declared tuned runs with the unit targets knowledge exact_match >= 0.60 and execution accuracy_rel2pct >= 0.60."
+}
