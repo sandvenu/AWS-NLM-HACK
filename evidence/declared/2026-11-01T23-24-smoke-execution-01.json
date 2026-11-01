@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-01T23-24-smoke-execution-01",
+  "team_code": "team07",
+  "unit": "smoke",
+  "target": {
+    "metric": "pipeline_completes",
+    "value": 1.0,
+    "direction": ">="
+  },
+  "test_set": "testsets/execution_telemath_synth.jsonl",
+  "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "none",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "6d7c4ac092004fcae732ff5f920a3098594489d2",
+  "declared_at": "2026-11-01T23:24:29+00:00",
+  "note": "plumbing smoke test: first 16 items only, not a reported result"
+}
