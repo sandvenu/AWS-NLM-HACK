@@ -82,7 +82,8 @@ def parse_letter(text):
 
 
 NUM = r"[-+]?(?:\d{1,3}(?:,\d{3})+|\d+)?(?:\.\d+)?(?:[eE][-+]?\d+)?(?:\s*(?:x|\*|×)\s*10\^\s*[-+]?\d+)?"
-_FINAL = re.compile(r"final answer\s*[:=]?\s*\**\s*(" + NUM + r")", re.IGNORECASE)
+_FINAL_LINE = re.compile(r"final answer\s*[:=]?(.*)", re.IGNORECASE)
+_FIRST_NUM = re.compile(r"\s*\**\s*(" + NUM + r")")
 
 
 def _to_float(s):
@@ -98,9 +99,13 @@ def _to_float(s):
 
 
 def parse_number(text):
-    t = _THINK.sub("", text)
-    hits = [h for h in _FINAL.findall(t) if re.search(r"\d", h)]
-    return _to_float(hits[-1]) if hits else None
+    """Number on the last 'Final answer:' line; if that line is an equation, the value after the last '='."""
+    lines = _FINAL_LINE.findall(_THINK.sub("", text))
+    if not lines:
+        return None
+    tail = lines[-1].rsplit("=", 1)[-1]
+    m = _FIRST_NUM.match(tail)
+    return _to_float(m.group(1)) if m and re.search(r"\d", m.group(1)) else None
 
 
 def num_correct(pred, gold, rel_tol):

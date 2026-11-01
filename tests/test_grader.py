@@ -1,0 +1,43 @@
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
+from nlm.common import num_correct, parse_letter, parse_number  # noqa: E402
+
+
+def test_parse_number():
+    cases = {
+        "Final answer: 1,234.5": 1234.5,
+        "steps\nFinal answer: 3.2e-4": 3.2e-4,
+        "Final answer: **42** dB": 42.0,
+        "Final answer: 2.5 x 10^3": 2500.0,
+        "Final answer: -95.4 dBm": -95.4,
+        "Final answer: .5": 0.5,
+        "Final answer: 21.4 + 1.1 + 5.0 - 117.4 = -96.7 dBm": -96.7,
+        "Final answer: 1\nmore text\nFinal answer: 2": 2.0,
+        "no final line 5": None,
+        "Final answer: unknown": None,
+    }
+    for text, want in cases.items():
+        assert parse_number(text) == want, (text, parse_number(text))
+
+
+def test_parse_letter():
+    cases = {"Answer: C": "C", "answer: (b)": "B", "B. because": "B", "The answer is D": "D",
+             "Answer: option E": "E", "I think": None, "<think>Answer: A</think>Answer: B": "B"}
+    for text, want in cases.items():
+        assert parse_letter(text) == want, (text, parse_letter(text))
+
+
+def test_tolerance():
+    assert num_correct(101.9, 100.0, 0.02)
+    assert not num_correct(102.1, 100.0, 0.02)
+    assert not num_correct(None, 1.0, 0.02)
+    assert num_correct(0.0, 0.0, 0.02)
+
+
+if __name__ == "__main__":
+    test_parse_number()
+    test_parse_letter()
+    test_tolerance()
+    print("grader tests passed")
