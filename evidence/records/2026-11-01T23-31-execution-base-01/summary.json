@@ -1,0 +1,23 @@
+{
+  "run_id": "2026-11-01T23-31-execution-base-01",
+  "unit": "execution",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "none",
+  "grader": "rule-based-parser-v1",
+  "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
+  "test_file": "execution_telemath_synth.jsonl",
+  "training_job_name": "2026-11-01T23-31-execution-base-01",
+  "instance_type": "ml.g6.2xlarge",
+  "gpu": "NVIDIA L4",
+  "batch_size": 32,
+  "max_new_tokens": 640,
+  "decoding": "greedy, enable_thinking=False",
+  "total_wall_s": 738.71,
+  "finished_at": "2026-11-01T23:48:31.015+00:00",
+  "n": 480,
+  "accuracy": 0.15,
+  "unparsed": 233,
+  "accuracy_loose_5pct": 0.16666666666666666,
+  "latency_p50_s": 1.6224,
+  "latency_p95_s": 1.6288
+}
