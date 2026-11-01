@@ -8,6 +8,15 @@
       "licence": "Apache-2.0 (team07 generated, synthetic)",
       "build": "python -m nlm.telemath_gen --seed 7101 --n 480 --prefix exe --out testsets/execution_telemath_synth.jsonl",
       "frozen_at": "2026-11-01T23:23:39+00:00"
+    },
+    "testsets/knowledge_teleqna.jsonl": {
+      "unit": "knowledge",
+      "sha256": "7e15eb4a2dfd14a7bba1fc7c8f83ed80dd789d21fd1094094a0c883c912ebc24",
+      "items": 500,
+      "source": "TeleQnA (github.com/netop-team/TeleQnA, TeleQnA.zip sha256 5302f1df9e0e66aafd12b945af518211bd41aa77294b0cac05e4234eaf12b0a5, TeleQnA.txt sha256 cec2806e6794827ea60040f738045445c3353bc7847e100829da89ffbc701a3e); 500 items stratified by category, seed 7102, options relabelled A-E",
+      "licence": "MIT",
+      "build": "python tools/build_knowledge.py --teleqna data/raw/TeleQnA.txt --test-out testsets/knowledge_teleqna.jsonl --pool-out data/train/teleqna_pool.jsonl",
+      "frozen_at": "2026-11-01T23:35:15+00:00"
     }
   }
 }
