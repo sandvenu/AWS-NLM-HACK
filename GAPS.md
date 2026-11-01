@@ -49,6 +49,18 @@ independent synthetic generator) are scored on our set as an out-of-generator co
 Following the "two finished units" rule. Per-item latency is recorded in every record, but no Price/Latency
 target was declared, so it is reported as information only.
 
+**G-07: The first Knowledge target was set too low. Limits: Knowledge (target quality).**
+Before seeing any result we declared the knowledge unit target as exact match >= 0.60. The untuned base scored
+0.646 (run `2026-11-01T23-35-knowledge-base-01`), so the baseline already PASSES that bar, and passing it says
+nothing about tuning. For the tuned run we declared, before launching it, a target above the measured base
+(see its declaration). Both declarations are kept unchanged; the scorecard reports the delta over base.
+
+**G-08: The base model often ignores the answer format on Execution. Limits: Execution (what the gain means).**
+In `2026-11-01T23-31-execution-base-01`, 233 of 480 base outputs have no parseable `Final answer:` line (the
+Leeds adapters: 0 and 2). The grader is strict by design (the same parser for every model), so part of any
+tuned-vs-base gain on Execution is format compliance, not arithmetic. Records show `parsed: null` for these
+items, and `accuracy` and `unparsed` are reported side by side.
+
 ## Run failures
 
 (none yet)
