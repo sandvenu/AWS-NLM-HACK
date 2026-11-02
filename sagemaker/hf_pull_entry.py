@@ -15,8 +15,8 @@ import os
 import boto3
 from huggingface_hub import HfApi, hf_hub_download
 
-INFO_ONLY = ["GSMA/ot-full", "netop/TeleQnA", "netop/TeleMath", "netop/TeleLogs"]
-DOWNLOAD = ["GSMA/ot-lite"]
+INFO_ONLY = ["netop/TeleQnA", "netop/TeleMath", "netop/TeleLogs"]
+DOWNLOAD = ["GSMA/ot_sample_data", "GSMA/ot-lite", "GSMA/ot-full"]
 MAX_FILE_BYTES = 300 * 1024 * 1024
 
 
