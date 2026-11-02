@@ -154,11 +154,23 @@ def generate(seed, n_review, n_request):
     return [{"id": it.pop("id"), **it} for it in items]
 
 
-def generate_train(seed, n_review, n_request, banned=frozenset()):
+def _show_steps(question):
+    """The arithmetic a reviewer does for a power/tilt change, written out (training replies only)."""
+    import re
+    m = re.search(r"power (\S+) dBm -> (\S+) dBm, electrical tilt (\S+) deg -> (\S+) deg", question)
+    if not m:
+        return ""
+    p0, p1, t0, t1 = map(float, m.groups())
+    return (f"Power {p0:g} -> {p1:g} dBm is a {abs(p1 - p0):g} dB step (P3 max 3) ending at {p1:g} dBm (P1 30 to 46); "
+            f"tilt {t0:g} -> {t1:g} deg is a {abs(t1 - t0):g} deg step (P3 max 2) ending at {t1:g} deg (P2 0 to 12). ")
+
+
+def generate_train(seed, n_review, n_request, banned=frozenset(), show_steps=False, rule_weights=None):
     """Training items with target replies. Reviews use the test generator's rules (another seed, test questions
-    banned); requests use TRAIN_* templates only."""
+    banned); requests use TRAIN_* templates only. show_steps adds the power/tilt arithmetic after the decision;
+    rule_weights (e.g. {"P3": 3}) repeats a rule in the rotation of rule-breaking items."""
     rng = random.Random(seed)
-    rules = list(POLICY_RULES)
+    rules = [r for r in POLICY_RULES for _ in range((rule_weights or {}).get(r, 1))]
     out = []
     while len([x for x in out if x["task"] == "review"]) < n_review:
         i = len(out)
@@ -166,6 +178,8 @@ def generate_train(seed, n_review, n_request, banned=frozenset()):
         if it["question"] in banned:
             continue
         why = f"It breaks {it['rule']}: {POLICY_RULES[it['rule']]}" if it["rule"] != "none" else "It breaks no policy rule."
+        if show_steps:
+            why = _show_steps(it["question"]) + why
         out.append({**it, "reply": f"Decision: {it['answer']}\n{why}"})
     for i in range(n_request):
         refuse = i % 2 == 1

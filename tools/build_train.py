@@ -37,6 +37,8 @@ def main():
     ap.add_argument("--safety-review-n", type=int, default=0)
     ap.add_argument("--safety-request-n", type=int, default=0)
     ap.add_argument("--safety-seed", type=int, default=8302)
+    ap.add_argument("--safety-show-steps", action="store_true", help="write the power/tilt arithmetic into review replies")
+    ap.add_argument("--safety-p3-weight", type=int, default=1, help="repeat the step-size rule P3 in the breach rotation")
     ap.add_argument("--out", default=os.path.join(ROOT, "data", "train", "train.jsonl"))
     ap.add_argument("--manifest", default=os.path.join(ROOT, "evidence", "train_manifest.json"))
     a = ap.parse_args()
@@ -60,7 +62,8 @@ def main():
             n += 1
     if a.safety_review_n or a.safety_request_n:
         banned_safety = frozenset(t["question"] for t in read_jsonl(SAFETY_TEST))
-        for k, it in enumerate(safety_train(a.safety_seed, a.safety_review_n, a.safety_request_n, banned_safety)):
+        for k, it in enumerate(safety_train(a.safety_seed, a.safety_review_n, a.safety_request_n, banned_safety,
+                                            a.safety_show_steps, {"P3": a.safety_p3_weight})):
             rows.append({"source": f"safety_{it['task']}", "id": f"trn-saf-{k:05d}",
                          "messages": messages_for("safety", it) + [{"role": "assistant", "content": it["reply"]}]})
     if a.teleqna_pool:
