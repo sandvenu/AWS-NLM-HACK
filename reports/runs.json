@@ -26,6 +26,10 @@
     "price_latency": {
       "base": "2026-11-02T07-16-pricelat-base-01",
       "tuned": "2026-11-02T07-16-pricelat-tuned-01"
+    },
+    "safety": {
+      "base": "2026-11-02T07-50-safety-base-01",
+      "tuned": "2026-11-02T08-00-safety-tuned-01"
     }
   },
   "s3_only_records": [
