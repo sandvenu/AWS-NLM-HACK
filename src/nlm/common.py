@@ -28,6 +28,39 @@ EXEC_SYS = (
 EXEC_REL_TOL = 0.02
 EXEC_REL_TOL_LOOSE = 0.05
 
+# GSMA official TeleMath protocol, ported verbatim from github.com/gsma-labs/evals (MIT),
+# commit 708f1c5498793536824eae9919ae003f13c910ea, src/evals/telemath/telemath.py.
+GSMA_TELEMATH_GRADER = "gsma-evals-telemath@708f1c5"
+GSMA_TELEMATH_SYS = r"""You are an expert problem solver. Your task is to solve numerical exercises by following these guidelines:
+1.  **Understand the Goal:** Clearly identify what the problem is asking you to find, paying close attention to the required units for the final answer.
+2.  **Reason Step-by-Step:** Provide a clear, sequential reasoning process. Explain the formulas, principles, or logic used in each step. Show intermediate calculations if they clarify your thought process. The detailed structure of your sub-steps is up to you, as long as the reasoning is sound and easy to follow.
+3.  **Unit Management:**
+    *   Track units throughout your calculations.
+    *   **Crucially, ensure your final numerical answer is converted to the specific units requested in the problem statement.** If intermediate calculations result in a different unit, perform a final conversion step.
+    *   State the unit of the final answer clearly in your explanatory text *before* the boxed answer.
+4.  **Final Numerical Answer Format:**
+    *   The final answer must be a single numerical value (integer or float).
+    *   Present this numerical value exclusively within the `\$\boxed{{...}}\$` format.
+    *   **CRITICAL:** The `\$\boxed{{...}}\$` block must contain *only* the number. No text, no units, no labels (e.g., NOT `\$\boxed{{Result: 50}}\$` or `\$\boxed{{50 \text{{ mA}}}}\$`, but `\$\boxed{{50}}\$`)."""
+_BOXED = re.compile(r"\\boxed\{((?:[^{}]|\{[^{}]*\})*)\}")
+_WS = re.compile(r"\n\s*")
+
+
+def parse_boxed(text):
+    """gsma-labs/evals parse_boxed_answer: last \\boxed{...}, whitespace removed."""
+    matches = _BOXED.findall(text or "")
+    if not matches:
+        return ""
+    return _WS.sub("", matches[-1].strip()).lstrip(":").rstrip("./")
+
+
+def gsma_telemath_correct(parsed, target):
+    """gsma-labs/evals telemath_scorer: isclose(rel_tol=0.01, abs_tol=0.01), else string equality."""
+    try:
+        return math.isclose(float(parsed), float(target), rel_tol=0.01, abs_tol=0.01)
+    except (ValueError, TypeError):
+        return parsed == str(target)
+
 
 def sha256_text(s):
     return hashlib.sha256(s.encode("utf-8")).hexdigest()
@@ -57,7 +90,9 @@ def exec_user(item):
     return item["question"] + (f" Give the answer in {item['unit']}." if item.get("unit") else "")
 
 
-def messages_for(unit, item):
+def messages_for(unit, item, grader=GRADER_ID):
+    if grader == GSMA_TELEMATH_GRADER:  # GSMA protocol: its system prompt, the bare question
+        return [{"role": "system", "content": GSMA_TELEMATH_SYS}, {"role": "user", "content": item["question"]}]
     if unit == "knowledge":
         return [{"role": "system", "content": KNOW_SYS}, {"role": "user", "content": know_user(item)}]
     if unit == "execution":
@@ -116,8 +151,11 @@ def num_correct(pred, gold, rel_tol):
     return math.isclose(pred, gold, rel_tol=rel_tol, abs_tol=0.0)
 
 
-def grade(unit, item, output):
-    """Return the graded fields for one item. Pure function of (item, output)."""
+def grade(unit, item, output, grader=GRADER_ID):
+    """Return the graded fields for one item. Pure function of (item, output, grader)."""
+    if grader == GSMA_TELEMATH_GRADER:
+        pred = parse_boxed(output)
+        return {"parsed": pred or None, "gold": item["answer"], "correct": gsma_telemath_correct(pred, item["answer"])}
     if unit == "knowledge":
         pred = parse_letter(output)
         return {"parsed": pred, "gold": item["answer"], "correct": pred == item["answer"]}

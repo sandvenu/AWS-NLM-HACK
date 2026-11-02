@@ -17,7 +17,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "src"))
-from nlm.common import grade, num_correct, read_jsonl, sha256_file, sha256_text, summarise  # noqa: E402
+from nlm.common import GRADER_ID, grade, num_correct, read_jsonl, sha256_file, sha256_text, summarise  # noqa: E402
 
 _times_path = os.path.join(ROOT, "evidence", "aws_job_times.json")
 AWS_TIMES = json.load(open(_times_path, encoding="utf-8")) if os.path.exists(_times_path) else {}
@@ -41,20 +41,26 @@ def rebuild_run(run_id, manifest, errors):
         return None
     test_rel = decl["test_set"]
     test_path = os.path.join(ROOT, test_rel)
-    actual = sha256_file(test_path)
-    if actual != decl["test_set_sha256"]:
-        errors.append(f"{run_id}: test set {test_rel} hash {actual} != declared {decl['test_set_sha256']}")
-    if manifest.get(test_rel, {}).get("sha256") != actual:
-        errors.append(f"{run_id}: test set {test_rel} does not match testsets/MANIFEST.json")
-    items = {it["id"]: it for it in read_jsonl(test_path)}
     records = read_jsonl(rec_path)
+    if manifest.get(test_rel, {}).get("sha256") != decl["test_set_sha256"]:
+        errors.append(f"{run_id}: declared test-set hash does not match testsets/MANIFEST.json")
+    if os.path.exists(test_path):
+        actual = sha256_file(test_path)
+        if actual != decl["test_set_sha256"]:
+            errors.append(f"{run_id}: test set {test_rel} hash {actual} != declared {decl['test_set_sha256']}")
+        items = {it["id"]: it for it in read_jsonl(test_path)}
+        test_set_check = "hash verified"
+    else:
+        # Test sets kept out of Git (licence terms, see DATA.md): re-grade against the gold stored in each record.
+        items = {r["item_id"]: {"id": r["item_id"], "answer": r["gold"]} for r in records}
+        test_set_check = "file not in repo; hash in MANIFEST, gold taken from records"
     regraded = []
     for r in records:
         if r["run_id"] != run_id:
             errors.append(f"{run_id}: record {r['item_id']} carries run_id {r['run_id']}")
         if sha256_text(r["output"]) != r["output_sha256"]:
             errors.append(f"{run_id}: record {r['item_id']} output hash mismatch")
-        g = grade(decl["unit"], items[r["item_id"]], r["output"])
+        g = grade(decl["unit"], items[r["item_id"]], r["output"], decl["grader"])
         if g["correct"] != r["correct"]:
             errors.append(f"{run_id}: record {r['item_id']} verdict {r['correct']} != regraded {g['correct']}")
         regraded.append({**r, **g})
@@ -71,13 +77,14 @@ def rebuild_run(run_id, manifest, errors):
         if not times_ok:
             errors.append(f"{run_id}: record times or declaration time disagree with AWS job times")
     summary = summarise(decl["unit"], regraded)
-    if decl["unit"] == "execution":  # information only, not a declared metric
+    if decl["unit"] == "execution" and decl["grader"] == GRADER_ID:  # information only, not a declared metric
         summary["info_accuracy_rel0_5pct"] = round(
             sum(num_correct(r["parsed"], r["gold"], 0.005) for r in regraded) / len(regraded), 4)
     value, verdict = check_target(decl, summary)
     return {"run_id": run_id, "unit": decl["unit"], "model_id": decl["model_id"], "adapter_id": decl["adapter_id"],
             "target": decl["target"], "declared_at": decl["declared_at"], "test_set_sha256": decl["test_set_sha256"],
-            "metric_value": value, "check": verdict, "times_agree_with_aws": times_ok, **summary}
+            "metric_value": value, "check": verdict, "times_agree_with_aws": times_ok, "grader": decl["grader"],
+            "test_set": test_rel, "test_set_check": test_set_check, **summary}
 
 
 def main():
@@ -86,7 +93,8 @@ def main():
     args = ap.parse_args()
     manifest = json.load(open(os.path.join(ROOT, "testsets", "MANIFEST.json"), encoding="utf-8"))["files"]
     for rel, meta in manifest.items():
-        if sha256_file(os.path.join(ROOT, rel)) != meta["sha256"]:
+        path = os.path.join(ROOT, rel)
+        if os.path.exists(path) and sha256_file(path) != meta["sha256"]:
             print(f"ERROR frozen test set changed: {rel}")
             sys.exit(1)
     runs = json.load(open(os.path.join(ROOT, "reports", "runs.json"), encoding="utf-8"))

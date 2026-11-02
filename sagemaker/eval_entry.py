@@ -38,6 +38,7 @@ def main():
     ap.add_argument("--batch_size", type=int, default=32)
     ap.add_argument("--max_new_tokens", type=int, default=0)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--grader", default=GRADER_ID)
     args, _ = ap.parse_known_args()
 
     run_id = args.run_id
@@ -51,7 +52,7 @@ def main():
         items = items[: args.limit]
     max_new = args.max_new_tokens or (24 if args.unit == "knowledge" else 640)
     log(f"START unit={args.unit} n={len(items)} test_sha256={test_sha} model_id={args.model_id} "
-        f"adapter_id={args.adapter_id} grader={GRADER_ID} job={os.environ.get('TRAINING_JOB_NAME', '?')}")
+        f"adapter_id={args.adapter_id} grader={args.grader} job={os.environ.get('TRAINING_JOB_NAME', '?')}")
 
     tok = AutoTokenizer.from_pretrained(model_dir)
     tok.padding_side = "left"
@@ -75,7 +76,7 @@ def main():
         log(f"adapter loaded from {root}")
     model.eval()
 
-    prompts = [tok.apply_chat_template(messages_for(args.unit, it), tokenize=False,
+    prompts = [tok.apply_chat_template(messages_for(args.unit, it, args.grader), tokenize=False,
                                        add_generation_prompt=True, enable_thinking=False) for it in items]
     records = []
     t_all = time.time()
@@ -96,19 +97,19 @@ def main():
             n_tok = sum(1 for t in ids if t != tok.pad_token_id)
             text = tok.decode(ids, skip_special_tokens=True)
             rec = {"run_id": run_id, "unit": args.unit, "item_id": it["id"], "model_id": args.model_id,
-                   "adapter_id": args.adapter_id, "grader": GRADER_ID, "test_set_sha256": test_sha,
+                   "adapter_id": args.adapter_id, "grader": args.grader, "test_set_sha256": test_sha,
                    "prompt_sha256": sha256_text(p), "output": text, "output_sha256": sha256_text(text),
                    "output_tokens": n_tok, "truncated": n_tok >= max_new, "batch_started_at": started,
                    "batch_finished_at": finished, "batch_wall_s": round(wall, 4),
                    "latency_s": round(wall / len(batch_items), 4)}
-            rec.update(grade(args.unit, it, text))
+            rec.update(grade(args.unit, it, text, args.grader))
             records.append(rec)
             log(f"RECORD item={it['id']} parsed={rec['parsed']} gold={rec['gold']} correct={rec['correct']} "
                 f"output_sha256={rec['output_sha256']}")
         log(f"batch {b // args.batch_size + 1}: {len(records)}/{len(items)} done, {wall:.1f}s")
 
     summary = {"run_id": run_id, "unit": args.unit, "model_id": args.model_id, "adapter_id": args.adapter_id,
-               "grader": GRADER_ID, "test_set_sha256": test_sha, "test_file": args.test_file,
+               "grader": args.grader, "test_set_sha256": test_sha, "test_file": args.test_file,
                "training_job_name": os.environ.get("TRAINING_JOB_NAME"), "instance_type": os.environ.get("SM_CURRENT_INSTANCE_TYPE"),
                "gpu": torch.cuda.get_device_name(0), "batch_size": args.batch_size, "max_new_tokens": max_new,
                "decoding": "greedy, enable_thinking=False", "total_wall_s": round(time.time() - t_all, 2),

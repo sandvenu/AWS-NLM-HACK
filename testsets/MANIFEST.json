@@ -17,6 +17,24 @@
       "licence": "MIT",
       "build": "python tools/build_knowledge.py --teleqna data/raw/TeleQnA.txt --test-out testsets/knowledge_teleqna.jsonl --pool-out data/train/teleqna_pool.jsonl",
       "frozen_at": "2026-11-01T23:35:15+00:00"
+    },
+    "data/testsets/execution_telemath_official.jsonl": {
+      "unit": "execution-ood",
+      "sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
+      "items": 500,
+      "source": "official TeleMath test split, config telemath, parquet sha256 c9b0523f7c6ae2ee83478f810a30fd8fbb3e320c615373a3f7e71c1e0f4cd9be; GSMA/ot-full rev 6319806f04783eafe04d9facf755d379c66b7664 (user download shared as OTfull.zip; uploaded to s3://bb26-p-team07-data-041915167631-use2/nlm-track1/data/raw/GSMA/ot-full/). NOT in Git; copy at s3://bb26-p-team07-data-041915167631-use2/nlm-track1/testsets/execution_telemath_official.jsonl",
+      "licence": "GSMA/ot-full card: MIT; TeleMath authors ask not to redistribute, so kept out of Git",
+      "build": "python tools/build_ood.py --otfull data/raw/GSMA/ot-full",
+      "frozen_at": "2026-11-02T00:28:23+00:00"
+    },
+    "data/testsets/knowledge_oranbench.jsonl": {
+      "unit": "knowledge-ood",
+      "sha256": "70ebb276fc4b15f97c91d16aefbb8d8c5e34b69785411dba7f23da3954f1a71d",
+      "items": 1500,
+      "source": "official ORAN-Bench test split, config oranbench (1,500 MCQ, easy/medium/hard 500 each), parquet sha256 1dafd3e4606c9e08add68797cdb0f202679dca4e4f6136c99a30bd1939f62778; GSMA/ot-full rev 6319806f04783eafe04d9facf755d379c66b7664 (user download shared as OTfull.zip; uploaded to s3://bb26-p-team07-data-041915167631-use2/nlm-track1/data/raw/GSMA/ot-full/). NOT in Git; copy at s3://bb26-p-team07-data-041915167631-use2/nlm-track1/testsets/knowledge_oranbench.jsonl",
+      "licence": "GSMA/ot-full card: MIT (kept out of Git with the other official splits)",
+      "build": "python tools/build_ood.py --otfull data/raw/GSMA/ot-full",
+      "frozen_at": "2026-11-02T00:28:24+00:00"
     }
   }
 }
