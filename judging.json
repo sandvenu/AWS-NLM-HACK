@@ -223,5 +223,5 @@
     "training_run": "2026-11-02T08-40-train-lora-02",
     "s3": "s3://bb26-p-team07-data-041915167631-use2/nlm-track1/jobs/2026-11-02T08-40-train-lora-02/output/model.tar.gz"
   },
-  "_run_ids_note": "20-run limit: base and submitted v2 for every unit and OOD test, both training runs, and v1's Safety and Execution runs. All other runs (v1 elsewhere, Leeds comparisons, team07-protocol TeleMath, smoke) are in reports/runs.json and reports/scorecard.md with full evidence."
+  "_run_ids_note": "20-run limit: base and submitted v2 for every unit and OOD test, both training runs, and v1's Safety and Execution runs. All other runs (v1 elsewhere, Leeds comparisons, team07-protocol TeleMath, the post-v2 TeleMath decoding runs, the rejected LoRA v3 and its 8 evaluations, smoke; GAPS G-19) are in reports/runs.json and reports/scorecard.md with full evidence."
 }

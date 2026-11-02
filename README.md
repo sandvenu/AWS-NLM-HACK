@@ -96,6 +96,11 @@ so a correct answer costs 8x less. Limits in GAPS G-16.
 v2's TeleMath gain is mostly answer format: outputs with no `\boxed{}` number fell from 210 (v1) to 24, and correct
 answers rose from 31 to 53 of 500. It is 3 items above the target, so it is a narrow pass (GAPS G-12).
 
+After v2, three declared attempts to go further were run and reported (GAPS G-19): a 2,048-token limit and a
+5-sample vote on official TeleMath (both 0.106, both FAIL their higher targets), and a LoRA v3 that gained on
+Execution (0.731) and ORAN-Bench (0.715) but failed Safety (harmful refusal 0.625) and lost 3 points on Knowledge.
+The rule fixed before the runs was "replace v2 only if no unit regresses", so v2 stays submitted.
+
 The organisers' Leeds TeleMath LoRAs on the same Execution set: v2 0.129, v3 0.154. At a stricter 0.5% tolerance
 (information only) base 0.123, v1 0.533, team07 v2 0.569. Training runs: v1 `2026-11-01T23-39-train-lora-01`, v2
 `2026-11-02T08-40-train-lora-02`. Read the caveats in GAPS.md

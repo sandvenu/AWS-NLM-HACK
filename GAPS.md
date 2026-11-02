@@ -168,12 +168,33 @@ seed 8302, test questions banned; 480 requests from training-only templates). Ev
   just missed its own 3GPP-TSG prediction (>= 0.20). No v1 runs on these two.
 - Not rerun for v2: official TeleMath under the team07 protocol, and Leeds comparisons.
 
+**G-19: Pushing past v2 did not help; v2 stays submitted. Limits: Safety, Knowledge, official TeleMath.**
+Three declared attempts after v2, each with its target set before launch:
+- Longer answers (`2026-11-02T10-20-telemath-gsma-v2-2k-01`, v2, greedy, 2,048 new tokens): official TeleMath 0.106,
+  identical to 1,024 tokens. Declared >= 0.11: FAIL. The remaining errors are wrong working, not cut-off answers.
+- Self-consistency vote (`2026-11-02T11-30-telemath-gsma-v2-vote5-02`, v2, 5 samples, temperature 0.7, majority answer,
+  all samples recorded and re-voted by `tools/rebuild.py`): 0.106 again, at about 5x the generation cost. Declared
+  >= 0.13: FAIL. The first attempt (`-vote5-01`) ran out of GPU memory (Run failures).
+- LoRA v3 (`2026-11-02T10-20-train-lora-03`, 24,956 rows, `evidence/train_manifest_v3.json`): v2's mix with 6,000
+  GSMA-format calculations, 3,000 change reviews with the power/tilt step arithmetic written out, and P3 breaches 4x.
+  v2 -> v3, same targets: Knowledge 0.752 -> 0.722, Execution 0.704 -> 0.731, Price/Latency $0.91 -> $0.86 per 1,000
+  correct, ORAN-Bench 0.705 -> 0.715, srsRAN-Bench 0.764 -> 0.757, 3GPP-TSG 0.243 -> 0.226, official TeleMath
+  0.106 -> 0.104, Safety accuracy 0.906 -> 0.867 with harmful refusal 1.00 -> 0.625: **Safety FAIL**. The reviews
+  improved (review accuracy 0.859 -> 0.894, false alarms 0.096 -> 0.033) but 3,000 reviews against 480 request
+  examples taught the model to comply with harmful requests it used to refuse. Rule applied, fixed before the runs:
+  replace v2 only if no unit regresses. v3 regresses on four, so **v2 stays the submitted adapter**.
+- Lesson for a v4 (not run): keep the request share at v2's level when adding reviews, and add TeleQnA rows in
+  proportion so Knowledge is not diluted.
+
 ## Run failures
 
 - `2026-11-01T23-24-smoke-execution-01`: plumbing smoke test (16 items) before any reported run; its output
   revealed that the parser read `Final answer: 21.4 + 1.1 + ... = -96.7` as 21.4. The grader was fixed to take the
   value after the last `=` (commit d2a00e2) **before** any reported run. Not a reported result.
-- No reported run failed or was relaunched (one 22-minute Pending wait, G-14).
+- `2026-11-02T10-20-telemath-gsma-v2-vote5-01` (declared): CUDA out of memory on ml.g5.2xlarge at batch 8 x 5 samples
+  x 2,048 tokens; no records, no score. Listed under failed runs in the scorecard and re-declared as
+  `2026-11-02T11-30-telemath-gsma-v2-vote5-02` (batch 6, 1,024 tokens; G-19).
+- No other reported run failed or was relaunched (one 22-minute Pending wait, G-14).
 - `tools/rebuild.py` first mis-graded the ORAN-Bench records: it graded unit `knowledge-ood` with the numeric
   parser. The stored verdicts were right and the rebuild tool was fixed. No record or declaration was changed.
 

@@ -21,6 +21,17 @@
     "billable_seconds": 2471,
     "tags_run_id": "2026-11-02T08-40-train-lora-02"
   },
+  "2026-11-02T10-20-train-lora-03": {
+    "training_job_name": "2026-11-02T10-20-train-lora-03",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T10-20-train-lora-03",
+    "status": "Completed",
+    "instance_type": "ml.g5.4xlarge",
+    "creation_time": "2026-11-02T15:29:36.804000+05:30",
+    "training_start_time": "2026-11-02T15:33:00.173000+05:30",
+    "training_end_time": "2026-11-02T16:27:48.955000+05:30",
+    "billable_seconds": 3288,
+    "tags_run_id": "2026-11-02T10-20-train-lora-03"
+  },
   "2026-11-01T23-35-knowledge-base-01": {
     "training_job_name": "2026-11-01T23-35-knowledge-base-01",
     "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-01T23-35-knowledge-base-01",
@@ -53,6 +64,17 @@
     "training_end_time": "2026-11-02T14:39:06.399000+05:30",
     "billable_seconds": 289,
     "tags_run_id": "2026-11-02T09-00-knowledge-v2-01"
+  },
+  "2026-11-02T11-30-knowledge-v3-01": {
+    "training_job_name": "2026-11-02T11-30-knowledge-v3-01",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T11-30-knowledge-v3-01",
+    "status": "Completed",
+    "instance_type": "ml.g5.2xlarge",
+    "creation_time": "2026-11-02T16:52:30.801000+05:30",
+    "training_start_time": "2026-11-02T16:53:13.888000+05:30",
+    "training_end_time": "2026-11-02T16:57:58.117000+05:30",
+    "billable_seconds": 285,
+    "tags_run_id": "2026-11-02T11-30-knowledge-v3-01"
   },
   "2026-11-01T23-31-execution-base-01": {
     "training_job_name": "2026-11-01T23-31-execution-base-01",
@@ -109,6 +131,17 @@
     "billable_seconds": 480,
     "tags_run_id": "2026-11-02T09-00-execution-v2-01"
   },
+  "2026-11-02T11-30-execution-v3-01": {
+    "training_job_name": "2026-11-02T11-30-execution-v3-01",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T11-30-execution-v3-01",
+    "status": "Completed",
+    "instance_type": "ml.g5.2xlarge",
+    "creation_time": "2026-11-02T16:58:17.744000+05:30",
+    "training_start_time": "2026-11-02T17:06:19.257000+05:30",
+    "training_end_time": "2026-11-02T17:13:14.097000+05:30",
+    "billable_seconds": 415,
+    "tags_run_id": "2026-11-02T11-30-execution-v3-01"
+  },
   "2026-11-02T00-55-oranbench-base-01": {
     "training_job_name": "2026-11-02T00-55-oranbench-base-01",
     "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T00-55-oranbench-base-01",
@@ -142,6 +175,17 @@
     "billable_seconds": 315,
     "tags_run_id": "2026-11-02T09-00-oranbench-v2-01"
   },
+  "2026-11-02T11-30-oranbench-v3-01": {
+    "training_job_name": "2026-11-02T11-30-oranbench-v3-01",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T11-30-oranbench-v3-01",
+    "status": "Completed",
+    "instance_type": "ml.g5.4xlarge",
+    "creation_time": "2026-11-02T16:59:38.927000+05:30",
+    "training_start_time": "2026-11-02T17:03:05.868000+05:30",
+    "training_end_time": "2026-11-02T17:08:20.315000+05:30",
+    "billable_seconds": 315,
+    "tags_run_id": "2026-11-02T11-30-oranbench-v3-01"
+  },
   "2026-11-02T00-29-telemath-gsma-base-01": {
     "training_job_name": "2026-11-02T00-29-telemath-gsma-base-01",
     "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T00-29-telemath-gsma-base-01",
@@ -174,6 +218,39 @@
     "training_end_time": "2026-11-02T15:15:02.876000+05:30",
     "billable_seconds": 1914,
     "tags_run_id": "2026-11-02T09-00-telemath-gsma-v2-01"
+  },
+  "2026-11-02T10-20-telemath-gsma-v2-2k-01": {
+    "training_job_name": "2026-11-02T10-20-telemath-gsma-v2-2k-01",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T10-20-telemath-gsma-v2-2k-01",
+    "status": "Completed",
+    "instance_type": "ml.g6.2xlarge",
+    "creation_time": "2026-11-02T15:28:08.679000+05:30",
+    "training_start_time": "2026-11-02T15:32:57.490000+05:30",
+    "training_end_time": "2026-11-02T16:46:49.617000+05:30",
+    "billable_seconds": 4432,
+    "tags_run_id": "2026-11-02T10-20-telemath-gsma-v2-2k-01"
+  },
+  "2026-11-02T11-30-telemath-gsma-v3-01": {
+    "training_job_name": "2026-11-02T11-30-telemath-gsma-v3-01",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T11-30-telemath-gsma-v3-01",
+    "status": "Completed",
+    "instance_type": "ml.g6.2xlarge",
+    "creation_time": "2026-11-02T17:01:25.406000+05:30",
+    "training_start_time": "2026-11-02T17:03:07.014000+05:30",
+    "training_end_time": "2026-11-02T17:37:45.231000+05:30",
+    "billable_seconds": 2078,
+    "tags_run_id": "2026-11-02T11-30-telemath-gsma-v3-01"
+  },
+  "2026-11-02T11-30-telemath-gsma-v2-vote5-02": {
+    "training_job_name": "2026-11-02T11-30-telemath-gsma-v2-vote5-02",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T11-30-telemath-gsma-v2-vote5-02",
+    "status": "Completed",
+    "instance_type": "ml.g5.2xlarge",
+    "creation_time": "2026-11-02T17:13:42.467000+05:30",
+    "training_start_time": "2026-11-02T17:17:46.887000+05:30",
+    "training_end_time": "2026-11-02T18:20:32.579000+05:30",
+    "billable_seconds": 3766,
+    "tags_run_id": "2026-11-02T11-30-telemath-gsma-v2-vote5-02"
   },
   "2026-11-02T00-29-telemath-team07-base-01": {
     "training_job_name": "2026-11-02T00-29-telemath-team07-base-01",
@@ -230,6 +307,17 @@
     "billable_seconds": 469,
     "tags_run_id": "2026-11-02T09-00-pricelat-v2-01"
   },
+  "2026-11-02T11-30-pricelat-v3-01": {
+    "training_job_name": "2026-11-02T11-30-pricelat-v3-01",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T11-30-pricelat-v3-01",
+    "status": "Completed",
+    "instance_type": "ml.g6.2xlarge",
+    "creation_time": "2026-11-02T16:52:30.815000+05:30",
+    "training_start_time": "2026-11-02T16:53:17.823000+05:30",
+    "training_end_time": "2026-11-02T17:01:02.780000+05:30",
+    "billable_seconds": 465,
+    "tags_run_id": "2026-11-02T11-30-pricelat-v3-01"
+  },
   "2026-11-02T07-50-safety-base-01": {
     "training_job_name": "2026-11-02T07-50-safety-base-01",
     "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T07-50-safety-base-01",
@@ -263,6 +351,17 @@
     "billable_seconds": 335,
     "tags_run_id": "2026-11-02T09-00-safety-v2-01"
   },
+  "2026-11-02T11-30-safety-v3-01": {
+    "training_job_name": "2026-11-02T11-30-safety-v3-01",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T11-30-safety-v3-01",
+    "status": "Completed",
+    "instance_type": "ml.g5.4xlarge",
+    "creation_time": "2026-11-02T16:52:30.815000+05:30",
+    "training_start_time": "2026-11-02T16:53:16.966000+05:30",
+    "training_end_time": "2026-11-02T16:59:01.730000+05:30",
+    "billable_seconds": 345,
+    "tags_run_id": "2026-11-02T11-30-safety-v3-01"
+  },
   "2026-11-02T08-30-srsran-base-01": {
     "training_job_name": "2026-11-02T08-30-srsran-base-01",
     "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T08-30-srsran-base-01",
@@ -285,6 +384,17 @@
     "billable_seconds": 319,
     "tags_run_id": "2026-11-02T09-00-srsran-v2-01"
   },
+  "2026-11-02T11-30-srsran-v3-01": {
+    "training_job_name": "2026-11-02T11-30-srsran-v3-01",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T11-30-srsran-v3-01",
+    "status": "Completed",
+    "instance_type": "ml.g6.xlarge",
+    "creation_time": "2026-11-02T16:52:34.076000+05:30",
+    "training_start_time": "2026-11-02T16:53:17.334000+05:30",
+    "training_end_time": "2026-11-02T16:58:36.666000+05:30",
+    "billable_seconds": 319,
+    "tags_run_id": "2026-11-02T11-30-srsran-v3-01"
+  },
   "2026-11-02T08-30-tsg-base-01": {
     "training_job_name": "2026-11-02T08-30-tsg-base-01",
     "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T08-30-tsg-base-01",
@@ -306,5 +416,16 @@
     "training_end_time": "2026-11-02T14:57:53.978000+05:30",
     "billable_seconds": 1041,
     "tags_run_id": "2026-11-02T09-00-tsg-v2-01"
+  },
+  "2026-11-02T11-30-tsg-v3-01": {
+    "training_job_name": "2026-11-02T11-30-tsg-v3-01",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T11-30-tsg-v3-01",
+    "status": "Completed",
+    "instance_type": "ml.g6.xlarge",
+    "creation_time": "2026-11-02T16:59:05.272000+05:30",
+    "training_start_time": "2026-11-02T17:03:04.259000+05:30",
+    "training_end_time": "2026-11-02T17:20:21.230000+05:30",
+    "billable_seconds": 1037,
+    "tags_run_id": "2026-11-02T11-30-tsg-v3-01"
   }
 }

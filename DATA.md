@@ -48,6 +48,12 @@ that state the unit and end in `$\boxed{<number>}$`, plus 1,500 safety change re
 (reply: `Decision: ...` and one reason). No official benchmark item is in either training set. Manifest:
 `evidence/train_manifest_v2.json`.
 
+LoRA v3 (`2026-11-02T10-20-train-lora-03`, evaluated and rejected, GAPS G-19): `data/train/train_v3.jsonl` (not
+committed; copy at `s3://bb26-p-team07-data-041915167631-use2/nlm-track1/train/2026-11-02T10-20-train-lora-03/train.jsonl`),
+sha256 `b99b7efb4c83591e49053f673475bd5d6a5e9216e0bcd8a4db90512154c05225`, 24,956 rows: v2's sources with 6,000
+GSMA-format calculations and 3,000 change reviews (step arithmetic written out, P3 breaches 4x); same 480 requests.
+Manifest: `evidence/train_manifest_v3.json`.
+
 ## Model outputs
 
 Every model output we rely on is a per-item record in
