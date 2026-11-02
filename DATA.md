@@ -54,6 +54,11 @@ sha256 `b99b7efb4c83591e49053f673475bd5d6a5e9216e0bcd8a4db90512154c05225`, 24,95
 GSMA-format calculations and 3,000 change reviews (step arithmetic written out, P3 breaches 4x); same 480 requests.
 Manifest: `evidence/train_manifest_v3.json`.
 
+LoRA v4 (`2026-11-02T21-30-train-lora-04`, evaluated and rejected, GAPS G-19): `data/train/train_v4.jsonl` (not
+committed; copy at `s3://bb26-p-team07-data-041915167631-use2/nlm-track1/train/2026-11-02T21-30-train-lora-04/train.jsonl`),
+sha256 `39ab0ee9bf3c3d4a3442550287cb0ba8a319e424c5b00340840339f5a0b12371`, 22,436 rows: v2's sources with v3's 3,000
+reviews and 960 requests. Manifest: `evidence/train_manifest_v4.json`.
+
 ## Model outputs
 
 Every model output we rely on is a per-item record in

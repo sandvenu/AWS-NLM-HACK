@@ -14,7 +14,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
     runs = json.load(open(os.path.join(ROOT, "reports", "runs.json"), encoding="utf-8"))
-    run_ids = [runs["training_run"], runs.get("training_run_v2"), runs.get("training_run_v3")] + [r for roles in runs["units"].values() for r in roles.values()]
+    run_ids = [runs["training_run"], runs.get("training_run_v2"), runs.get("training_run_v3"), runs.get("training_run_v4")] + [r for roles in runs["units"].values() for r in roles.values()]
     run_ids = [r for r in run_ids if r]
     sm = boto3.client("sagemaker", region_name="us-east-2")
     out = {}

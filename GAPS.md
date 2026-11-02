@@ -183,8 +183,14 @@ Three declared attempts after v2, each with its target set before launch:
   improved (review accuracy 0.859 -> 0.894, false alarms 0.096 -> 0.033) but 3,000 reviews against 480 request
   examples taught the model to comply with harmful requests it used to refuse. Rule applied, fixed before the runs:
   replace v2 only if no unit regresses. v3 regresses on four, so **v2 stays the submitted adapter**.
-- Lesson for a v4 (not run): keep the request share at v2's level when adding reviews, and add TeleQnA rows in
-  proportion so Knowledge is not diluted.
+- LoRA v4 (`2026-11-02T21-30-train-lora-04`, 22,436 rows, `evidence/train_manifest_v4.json`) tested that lesson: v2's
+  mix with v3's 3,000 worked-arithmetic reviews and requests doubled to 960 (v2's review:request ratio; 390 distinct
+  prompts). v2 -> v4, same targets: Execution 0.704 -> 0.727, srsRAN-Bench 0.764 -> 0.768, $0.91 -> $0.85 per 1,000
+  correct, false alarms 0.096 -> 0.063 (better); Knowledge 0.752 -> 0.724, ORAN-Bench 0.705 -> 0.705, 3GPP-TSG
+  0.243 -> 0.168 (FAIL), official TeleMath 0.106 -> 0.066 (FAIL), Safety harmful refusal 1.00 -> 0.81 (FAIL).
+  **Rejected; v2 stays.** Restoring the request ratio only partly restored refusals, and Knowledge fell by the same
+  3 pp as in v3. The one ingredient v3 and v4 share is the long worked-arithmetic review replies, so the likely cause
+  is those replies, not the mix ratio. Not tested further before the deadline.
 
 ## Run failures
 
