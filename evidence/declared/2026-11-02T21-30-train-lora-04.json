@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T21-30-train-lora-04",
+  "team_code": "team07",
+  "unit": "training",
+  "target": {
+    "metric": "train_completes",
+    "value": 1.0,
+    "direction": ">="
+  },
+  "test_set": null,
+  "test_set_sha256": null,
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v4",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "d1ab5ff188ce94f75d1e298925a1710d2c4b2135",
+  "declared_at": "2026-11-02T21:18:36+00:00",
+  "note": "LoRA SFT, same recipe as v1-v3 (r=32, alpha=64, all-linear, 1 epoch, lr 2e-4, max_seq_len 1024), on data/train/train_v4.jsonl sha256 39ab0ee9bf3c3d4a3442550287cb0ba8a319e424c5b00340840339f5a0b12371 (22,436 rows: v2's 6,000 synthetic execution, 9,476 TeleQnA non-test and 3,000 GSMA-format calculations; 3,000 safety change reviews, seed 8302, test questions banned, step arithmetic written out, P3 4x; 960 safety requests from training-only templates, 390 distinct prompts). Built from what G-19 found: v3's reviews were better but its request share fell and Safety failed. v4 replaces v2 only if no declared unit gets worse. Adapter scored by separately declared runs."
+}
