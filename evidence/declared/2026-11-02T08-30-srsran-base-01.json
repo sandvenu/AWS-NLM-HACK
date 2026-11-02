@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T08-30-srsran-base-01",
+  "team_code": "team07",
+  "unit": "knowledge-ood",
+  "target": {
+    "metric": "exact_match",
+    "value": 0.5,
+    "direction": ">="
+  },
+  "test_set": "data/testsets/knowledge_srsranbench.jsonl",
+  "test_set_sha256": "476aaeb232548559b789d82065c5f07ade99fbeba62bf163977033106eb338f8",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "none",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "3b47191324558bc7eee3c4b9749240d65f961161",
+  "declared_at": "2026-11-02T08:19:05+00:00",
+  "note": "Out-of-distribution baseline on an official GSMA/ot-full test split (never trained on; 4 options after shuffling, chance 0.25). Prediction before any result: >= 0.50. Tuned v2 run declared separately."
+}

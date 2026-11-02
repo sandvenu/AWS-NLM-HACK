@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T08-30-tsg-base-01",
+  "team_code": "team07",
+  "unit": "classify-ood",
+  "target": {
+    "metric": "accuracy",
+    "value": 0.2,
+    "direction": ">="
+  },
+  "test_set": "data/testsets/classify_3gpp_tsg.jsonl",
+  "test_set_sha256": "a579e5de924ef924c9c017b1ceffd4bbdfe93c74be180a59584208e18f622f6b",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "none",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "3b47191324558bc7eee3c4b9749240d65f961161",
+  "declared_at": "2026-11-02T08:19:14+00:00",
+  "note": "Out-of-distribution baseline on an official GSMA/ot-full test split (never trained on; 16 working groups, chance 0.0625, benchmark prompt verbatim). Prediction before any result: >= 0.20. Tuned v2 run declared separately."
+}
