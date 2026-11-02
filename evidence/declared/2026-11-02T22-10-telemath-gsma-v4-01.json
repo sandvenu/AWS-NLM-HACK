@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T22-10-telemath-gsma-v4-01",
+  "team_code": "team07",
+  "unit": "execution-ood",
+  "target": {
+    "metric": "accuracy_gsma_rule",
+    "value": 0.1,
+    "direction": ">="
+  },
+  "test_set": "data/testsets/execution_telemath_official.jsonl",
+  "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v4",
+  "grader": "gsma-evals-telemath@708f1c5",
+  "git_commit": "d27d6c79413c08e1d6aec321293e204a7aa8fb97",
+  "declared_at": "2026-11-02T21:20:10+00:00",
+  "note": "Adapter team07-lora-v4 from run 2026-11-02T21-30-train-lora-04. Official TeleMath, GSMA protocol unchanged from v1/v2 (GSMA system prompt, last boxed number, rel/abs tol 0.01, greedy, max 1024 new tokens). v4 has 3,000 GSMA-format calculations, as v2 (v3 had 6,000 and scored 0.104). Same target as v1-v3 (v2 0.106)."
+}

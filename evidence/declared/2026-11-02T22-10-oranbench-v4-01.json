@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T22-10-oranbench-v4-01",
+  "team_code": "team07",
+  "unit": "knowledge-ood",
+  "target": {
+    "metric": "exact_match",
+    "value": 0.65,
+    "direction": ">="
+  },
+  "test_set": "data/testsets/knowledge_oranbench.jsonl",
+  "test_set_sha256": "70ebb276fc4b15f97c91d16aefbb8d8c5e34b69785411dba7f23da3954f1a71d",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v4",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "d27d6c79413c08e1d6aec321293e204a7aa8fb97",
+  "declared_at": "2026-11-02T21:20:15+00:00",
+  "note": "Adapter team07-lora-v4 from run 2026-11-02T21-30-train-lora-04. Same target as v1-v3 (base 0.672, v2 0.705, v3 0.715)."
+}
