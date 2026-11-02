@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T10-20-train-lora-03",
+  "team_code": "team07",
+  "unit": "training",
+  "target": {
+    "metric": "train_completes",
+    "value": 1.0,
+    "direction": ">="
+  },
+  "test_set": null,
+  "test_set_sha256": null,
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v3",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "b6922840e3de3de1746f800870270886c4a479a4",
+  "declared_at": "2026-11-02T09:59:29+00:00",
+  "note": "LoRA SFT, same recipe as v1/v2 (r=32, alpha=64, all-linear, 1 epoch, lr 2e-4, max_seq_len 1024), on data/train/train_v3.jsonl sha256 b99b7efb4c83591e49053f673475bd5d6a5e9216e0bcd8a4db90512154c05225 (24,956 rows: v1's 6,000 synthetic execution + 9,476 TeleQnA non-test; 6,000 synthetic calculations in the GSMA prompt and boxed format, seed 8212; 3,000 safety change reviews, seed 8302, test questions banned, replies write out the power/tilt step arithmetic, step-size rule P3 4x in the breach rotation; 480 safety requests from training-only templates). Goal: raise Safety P3 recall and official TeleMath above v2 without regressions. v3 replaces v2 only if no declared unit gets worse. Adapter scored by separately declared runs."
+}
