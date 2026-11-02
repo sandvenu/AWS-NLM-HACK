@@ -18,18 +18,45 @@
     "2026-11-01T23-31-execution-base-01",
     "2026-11-02T00-05-execution-tuned-01",
     "2026-11-01T23-39-train-lora-01",
+    "2026-11-02T00-55-oranbench-base-01",
+    "2026-11-02T00-55-oranbench-tuned-01",
+    "2026-11-02T00-29-telemath-gsma-base-01",
+    "2026-11-02T00-29-telemath-gsma-tuned-01",
+    "2026-11-02T00-29-telemath-team07-base-01",
+    "2026-11-02T00-29-telemath-team07-tuned-01",
     "2026-11-01T23-31-execution-leedsv2-01",
     "2026-11-01T23-31-execution-leedsv3-01",
     "2026-11-01T23-24-smoke-execution-01"
   ],
   "live_test_command": "python3 tools/show_record.py --run-id {run_id} --item {item}",
-  "live_test_services": ["s3:GetObject", "logs:FilterLogEvents"],
+  "live_test_services": [
+    "s3:GetObject",
+    "logs:FilterLogEvents"
+  ],
   "rebuild_command": "python3 tools/rebuild.py",
   "test_sets": {
-    "knowledge": {"file": "testsets/knowledge_teleqna.jsonl", "sha256": "7e15eb4a2dfd14a7bba1fc7c8f83ed80dd789d21fd1094094a0c883c912ebc24", "items": 500},
-    "execution": {"file": "testsets/execution_telemath_synth.jsonl", "sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63", "items": 480}
+    "knowledge": {
+      "file": "testsets/knowledge_teleqna.jsonl",
+      "sha256": "7e15eb4a2dfd14a7bba1fc7c8f83ed80dd789d21fd1094094a0c883c912ebc24",
+      "items": 500
+    },
+    "execution": {
+      "file": "testsets/execution_telemath_synth.jsonl",
+      "sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
+      "items": 480
+    },
+    "knowledge_ood_oranbench": {
+      "file": "data/testsets/knowledge_oranbench.jsonl (not in Git; s3://bb26-p-team07-data-041915167631-use2/nlm-track1/testsets/)",
+      "sha256": "70ebb276fc4b15f97c91d16aefbb8d8c5e34b69785411dba7f23da3954f1a71d",
+      "items": 1500
+    },
+    "execution_ood_telemath_official": {
+      "file": "data/testsets/execution_telemath_official.jsonl (not in Git; s3://bb26-p-team07-data-041915167631-use2/nlm-track1/testsets/)",
+      "sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
+      "items": 500
+    }
   },
-  "grader": "rule-based-parser-v1 (src/nlm/common.py); no LLM grader",
+  "grader": "rule-based-parser-v1 (src/nlm/common.py) and gsma-evals-telemath@708f1c5 (verbatim port of the gsma-labs/evals TeleMath scorer); no LLM grader",
   "reported_results": {
     "knowledge": {
       "metric": "exact_match",
@@ -51,9 +78,41 @@
       "check": "PASS",
       "base_run_id": "2026-11-01T23-31-execution-base-01",
       "tuned_run_id": "2026-11-02T00-05-execution-tuned-01",
-      "comparison_points": {"leeds_telemath_v2": 0.1292, "leeds_telemath_v3": 0.1542}
+      "comparison_points": {
+        "leeds_telemath_v2": 0.1292,
+        "leeds_telemath_v3": 0.1542
+      }
     },
     "safety_and_trustworthiness": "not attempted (GAPS.md G-06)",
-    "price_and_latency": "not declared; per-item latency recorded in every record (GAPS.md G-06)"
+    "price_and_latency": "not declared; per-item latency recorded in every record (GAPS.md G-06)",
+    "out_of_distribution": {
+      "oranbench_exact_match": {
+        "base": 0.672,
+        "tuned": 0.706,
+        "delta": 0.034,
+        "target": ">= 0.65",
+        "check": "PASS (base also passes; GAPS G-13)",
+        "base_run_id": "2026-11-02T00-55-oranbench-base-01",
+        "tuned_run_id": "2026-11-02T00-55-oranbench-tuned-01"
+      },
+      "telemath_official_gsma_protocol": {
+        "base": 0.008,
+        "tuned": 0.062,
+        "delta": 0.054,
+        "target": ">= 0.10",
+        "check": "FAIL",
+        "base_run_id": "2026-11-02T00-29-telemath-gsma-base-01",
+        "tuned_run_id": "2026-11-02T00-29-telemath-gsma-tuned-01"
+      },
+      "telemath_official_team07_protocol_rel2pct": {
+        "base": 0.04,
+        "tuned": 0.07,
+        "delta": 0.03,
+        "target": ">= 0.10",
+        "check": "FAIL",
+        "base_run_id": "2026-11-02T00-29-telemath-team07-base-01",
+        "tuned_run_id": "2026-11-02T00-29-telemath-team07-tuned-01"
+      }
+    }
   }
 }

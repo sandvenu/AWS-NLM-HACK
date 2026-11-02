@@ -42,6 +42,7 @@ def rebuild_run(run_id, manifest, errors):
     test_rel = decl["test_set"]
     test_path = os.path.join(ROOT, test_rel)
     records = read_jsonl(rec_path)
+    gunit = decl["unit"].removesuffix("-ood")  # grading unit: knowledge-ood is graded like knowledge
     if manifest.get(test_rel, {}).get("sha256") != decl["test_set_sha256"]:
         errors.append(f"{run_id}: declared test-set hash does not match testsets/MANIFEST.json")
     if os.path.exists(test_path):
@@ -60,7 +61,7 @@ def rebuild_run(run_id, manifest, errors):
             errors.append(f"{run_id}: record {r['item_id']} carries run_id {r['run_id']}")
         if sha256_text(r["output"]) != r["output_sha256"]:
             errors.append(f"{run_id}: record {r['item_id']} output hash mismatch")
-        g = grade(decl["unit"], items[r["item_id"]], r["output"], decl["grader"])
+        g = grade(gunit, items[r["item_id"]], r["output"], decl["grader"])
         if g["correct"] != r["correct"]:
             errors.append(f"{run_id}: record {r['item_id']} verdict {r['correct']} != regraded {g['correct']}")
         regraded.append({**r, **g})
@@ -76,8 +77,8 @@ def rebuild_run(run_id, manifest, errors):
             for r in records)
         if not times_ok:
             errors.append(f"{run_id}: record times or declaration time disagree with AWS job times")
-    summary = summarise(decl["unit"], regraded)
-    if decl["unit"] == "execution" and decl["grader"] == GRADER_ID:  # information only, not a declared metric
+    summary = summarise(gunit, regraded)
+    if gunit == "execution" and decl["grader"] == GRADER_ID:  # information only, not a declared metric
         summary["info_accuracy_rel0_5pct"] = round(
             sum(num_correct(r["parsed"], r["gold"], 0.005) for r in regraded) / len(regraded), 4)
     value, verdict = check_target(decl, summary)

@@ -1,0 +1,23 @@
+{
+  "run_id": "2026-11-02T00-29-telemath-team07-base-01",
+  "unit": "execution",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "none",
+  "grader": "rule-based-parser-v1",
+  "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
+  "test_file": "execution_telemath_official.jsonl",
+  "training_job_name": "2026-11-02T00-29-telemath-team07-base-01",
+  "instance_type": "ml.g5.4xlarge",
+  "gpu": "NVIDIA A10G",
+  "batch_size": 32,
+  "max_new_tokens": 1024,
+  "decoding": "greedy, enable_thinking=False",
+  "total_wall_s": 1028.57,
+  "finished_at": "2026-11-02T00:53:57.720+00:00",
+  "n": 500,
+  "accuracy": 0.04,
+  "unparsed": 233,
+  "accuracy_loose_5pct": 0.04,
+  "latency_p50_s": 1.9965,
+  "latency_p95_s": 2.2198
+}

@@ -1,0 +1,22 @@
+{
+  "run_id": "2026-11-02T00-55-oranbench-base-01",
+  "unit": "knowledge",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "none",
+  "grader": "rule-based-parser-v1",
+  "test_set_sha256": "70ebb276fc4b15f97c91d16aefbb8d8c5e34b69785411dba7f23da3954f1a71d",
+  "test_file": "knowledge_oranbench.jsonl",
+  "training_job_name": "2026-11-02T00-55-oranbench-base-01",
+  "instance_type": "ml.g5.4xlarge",
+  "gpu": "NVIDIA A10G",
+  "batch_size": 32,
+  "max_new_tokens": 24,
+  "decoding": "greedy, enable_thinking=False",
+  "total_wall_s": 63.93,
+  "finished_at": "2026-11-02T01:01:50.779+00:00",
+  "n": 1500,
+  "accuracy": 0.672,
+  "unparsed": 2,
+  "latency_p50_s": 0.042,
+  "latency_p95_s": 0.0477
+}

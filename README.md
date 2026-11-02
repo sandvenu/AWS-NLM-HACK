@@ -52,6 +52,16 @@ Environment: `AWS_PROFILE=fyuz`, region us-east-2, Python ≥ 3.11 with `boto3` 
 | Knowledge (TeleQnA, 500) | exact match | 0.646 | **0.738** | +9.2 pp | >= 0.68 | PASS |
 | Execution (synthetic telecom math, 480) | within 2% rel. error | 0.150 | **0.679** | +52.9 pp | >= 0.60 | PASS |
 
+**Out-of-distribution checks** (official `GSMA/ot-full` test splits, never trained on, hashes frozen, files kept out of Git):
+
+| Test | Protocol | Base | Tuned | Delta | Declared prediction | Check |
+|---|---|---|---|---|---|---|
+| ORAN-Bench (1,500 MCQ) | team07 knowledge prompt, exact match | 0.672 | 0.706 | +3.4 pp | >= 0.65 | PASS (base passes too, GAPS G-13) |
+| Official TeleMath (500) | GSMA official prompt + scorer (gsma-labs/evals@708f1c5) | 0.008 | 0.062 | +5.4 pp | >= 0.10 | FAIL |
+| Official TeleMath (500) | team07 prompt + parser, 2% | 0.040 | 0.070 | +3.0 pp | >= 0.10 | FAIL |
+
+The large synthetic Execution gain mostly does **not** transfer to real TeleMath (GAPS G-12).
+
 The organisers' Leeds TeleMath LoRAs on the same Execution set: v2 0.129, v3 0.154. At a stricter 0.5% tolerance
 (information only) tuned 0.533 vs base 0.123. Run ids: knowledge `2026-11-01T23-35-knowledge-base-01` ->
 `2026-11-02T00-05-knowledge-tuned-01`; execution `2026-11-01T23-31-execution-base-01` ->

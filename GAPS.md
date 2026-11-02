@@ -9,9 +9,10 @@ Times are UTC. Each gap names the unit it limits.
   "Access Denied, your system policy has denied access" page (category Technology/Internet). An automated
   web fetcher got HTTP 403 for every HF page (model cards `att/OTel-LLM-1.7B-IT` and
   `farbodtavakkoli/OTel-LLM-1.7B-IT`, `GSMA/ot-lite`, `GSMA/ot-full`, `netop/TeleQnA|TeleMath|TeleLogs`).
-- Effect: GSMA Open Telco licences, splits and sizes are **not verified** by us. The official TeleMath-500 is
-  gated on HF and is not used. Execution is measured on a team07 synthetic telecom-math set instead
-  (in-distribution with our training generator, see G-05).
+- Effect: the Execution unit is measured on a team07 synthetic telecom-math set (in-distribution with our training
+  generator, see G-05). Resolved later for the out-of-distribution checks: the user downloaded `GSMA/ot-full`
+  (revision 6319806f...) and shared it as a zip (2026-11-02 ~00:23 UTC), giving the official TeleMath and ORAN-Bench
+  test splits (G-12, G-13). `netop/TeleMath` itself stays gated (the user's account sees only the card images).
 - We did not route around the block. A Lambda that would have pulled HF files from inside AWS was written,
   then not deployed (our own review: it would bypass the network policy). Its IAM role was created and deleted
   the same minute. Raised with the team lead (see G-02b).
@@ -42,7 +43,7 @@ the bucket holds them at `leeds/telemath-leeds/v2/adapter/` and `.../v3/adapter/
 **G-05: Execution test set is synthetic and shares a generator with our training data. Limits: Execution.**
 Test and train come from the same 24 formula families (different seeds; every test question's hash is banned
 from training). A gain here shows the model learned these calculation procedures and the answer format. It does
-not show transfer to the official TeleMath benchmark. The organisers' Leeds adapters (trained on their own,
+not show transfer to the official TeleMath benchmark (G-12 measures that transfer, and it is small). The organisers' Leeds adapters (trained on their own,
 independent synthetic generator) are scored on our set as an out-of-generator comparison.
 
 **G-06: Not attempted: Safety & trustworthiness, Price & latency (as declared units), RL against the hosted twin, MAVERIC config tasks.**
@@ -83,11 +84,37 @@ specifications 0.510 -> 0.630, Research publications 0.707 -> 0.796, Lexicon 0.6
 independent knowledge benchmark (GSMA ot-lite was not reachable, G-01/G-02b). Near-duplicate (paraphrase)
 overlap between pool and test was not measured.
 
+**G-12: The Execution gain mostly does not transfer to the official TeleMath benchmark. Limits: Execution.**
+Official TeleMath test split (500, `GSMA/ot-full`), never trained on, declared before the runs with prediction tuned >= 0.10:
+- team07 prompt and parser (2%): base 0.040 -> tuned 0.070 (`2026-11-02T00-29-telemath-team07-base-01` ->
+  `2026-11-02T00-29-telemath-team07-tuned-01`). Target missed: FAIL.
+- GSMA official prompt and scorer (`gsma-evals-telemath@708f1c5`): base 0.008 -> tuned 0.062
+  (`2026-11-02T00-29-telemath-gsma-base-01` -> `2026-11-02T00-29-telemath-gsma-tuned-01`). Target missed: FAIL.
+  The base model left no `\boxed{}` answer in 454/500 outputs (388 of them not truncated: it ignores the format);
+  the tuned model in 210/500 (109 hit the 1,024-token limit). For comparison, the organisers report the Leeds
+  adapters at 5.8% (v2) and 4.2% (v3) on official TeleMath with their own 5% scorer (not rerun by us).
+
+So the +52.9 pp on our synthetic set is mostly learned procedure and answer format for our 24 families. On real
+TeleMath (multi-step probability, queueing, information theory) the tuned 1.7B model gains only 3 to 5 pp.
+The GSMA scorer also uses `abs_tol=0.01`, so an answer counts as correct whenever |pred - gold| <= 0.01, even when
+the gold itself is tiny (e.g. 7.2e-05). We ported it verbatim and did not correct this.
+
+**G-13: ORAN-Bench target set too low; the gain is modest. Limits: Knowledge (out of distribution).**
+Official ORAN-Bench test split (1,500 O-RAN MCQs, never trained on): base 0.672 -> tuned 0.706 (+3.4 pp), runs
+`2026-11-02T00-55-oranbench-base-01` -> `2026-11-02T00-55-oranbench-tuned-01`. The declared target (>= 0.65) was
+below the base, so both PASS and the check says nothing about tuning (as in G-07). The evidence is the +3.4 pp
+delta: TeleQnA training transfers a little to O-RAN questions.
+
+**G-14: One job waited 22 minutes for a GPU.** `2026-11-02T00-29-telemath-gsma-tuned-01` on ml.g5.2xlarge was
+created 00:29 UTC and started downloading at 00:51 UTC. Under the 30-minute rule, so not relaunched. No other job
+waited more than about a minute.
+
 ## Run failures
 
 - `2026-11-01T23-24-smoke-execution-01`: plumbing smoke test (16 items) before any reported run; its output
   revealed that the parser read `Final answer: 21.4 + 1.1 + ... = -96.7` as 21.4. The grader was fixed to take the
   value after the last `=` (commit d2a00e2) **before** any reported run. Not a reported result.
-- No reported run failed or was relaunched. GPU capacity was available on the first try on every instance type
-  (ml.g6.2xlarge, ml.g5.2xlarge, ml.g5.4xlarge, ml.g6.xlarge), nothing Pending more than ~1 minute.
+- No reported run failed or was relaunched (one 22-minute Pending wait, G-14).
+- `tools/rebuild.py` first mis-graded the ORAN-Bench records: it graded unit `knowledge-ood` with the numeric
+  parser. The stored verdicts were right and the rebuild tool was fixed. No record or declaration was changed.
 

@@ -1,0 +1,23 @@
+{
+  "run_id": "2026-11-02T00-29-telemath-gsma-base-01",
+  "unit": "execution",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "none",
+  "grader": "gsma-evals-telemath@708f1c5",
+  "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
+  "test_file": "execution_telemath_official.jsonl",
+  "training_job_name": "2026-11-02T00-29-telemath-gsma-base-01",
+  "instance_type": "ml.g6.2xlarge",
+  "gpu": "NVIDIA L4",
+  "batch_size": 32,
+  "max_new_tokens": 1024,
+  "decoding": "greedy, enable_thinking=False",
+  "total_wall_s": 2239.53,
+  "finished_at": "2026-11-02T01:13:35.882+00:00",
+  "n": 500,
+  "accuracy": 0.008,
+  "unparsed": 454,
+  "accuracy_loose_5pct": 0.0,
+  "latency_p50_s": 4.3848,
+  "latency_p95_s": 4.8165
+}

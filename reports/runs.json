@@ -10,6 +10,18 @@
       "tuned": "2026-11-02T00-05-execution-tuned-01",
       "leeds_v2": "2026-11-01T23-31-execution-leedsv2-01",
       "leeds_v3": "2026-11-01T23-31-execution-leedsv3-01"
+    },
+    "knowledge_ood_oranbench": {
+      "base": "2026-11-02T00-55-oranbench-base-01",
+      "tuned": "2026-11-02T00-55-oranbench-tuned-01"
+    },
+    "execution_ood_telemath_gsma_protocol": {
+      "base": "2026-11-02T00-29-telemath-gsma-base-01",
+      "tuned": "2026-11-02T00-29-telemath-gsma-tuned-01"
+    },
+    "execution_ood_telemath_team07_protocol": {
+      "base": "2026-11-02T00-29-telemath-team07-base-01",
+      "tuned": "2026-11-02T00-29-telemath-team07-tuned-01"
     }
   }
 }
