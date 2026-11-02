@@ -1,0 +1,20 @@
+{
+  "file": "data/train/train_v2.jsonl (not committed; s3://bb26-p-team07-data-041915167631-use2/nlm-track1/train/<run_id>/train.jsonl)",
+  "sha256": "0e016badcbae1240755170dc7cc434e7ac146e1cfa5622ff180085494c984dd7",
+  "rows": 20456,
+  "by_source": {
+    "telemath_gen": 6000,
+    "teleqna": 9476,
+    "telemath_gen_gsma_format": 3000,
+    "safety_request": 480,
+    "safety_review": 1500
+  },
+  "exec_seed": 8202,
+  "exec_test_questions_banned": 480,
+  "knowledge_test_items_excluded": true,
+  "build": "python tools/build_train.py --exec-n 6000 --teleqna-pool data/train/teleqna_pool.jsonl --gsma-n 3000 --safety-review-n 1500 --safety-request-n 480 --out data/train/train_v2.jsonl --manifest evidence/train_manifest_v2.json",
+  "gsma_seed": 8212,
+  "safety_seed": 8302,
+  "safety_test_questions_banned": true,
+  "safety_request_templates": "TRAIN_* templates only (test topics never trained on)"
+}
