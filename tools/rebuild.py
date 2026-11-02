@@ -155,7 +155,10 @@ def main():
     if errors:
         print("\nERRORS:\n" + "\n".join(errors))
         sys.exit(1)
-    print("\nrebuild OK: every record re-graded and matched; test-set hashes match declarations")
+    s3_only = [r for r in runs.get("s3_only_records", [])
+               if not os.path.exists(os.path.join(ROOT, "evidence", "records", r, "records.jsonl"))]
+    note = f" ({len(s3_only)} official-TeleMath runs reported from summary.json; records in S3 only)" if s3_only else ""
+    print("\nrebuild OK: every committed record re-graded and matched; test-set hashes match declarations" + note)
 
 
 if __name__ == "__main__":
