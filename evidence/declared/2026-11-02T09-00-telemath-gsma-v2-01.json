@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T09-00-telemath-gsma-v2-01",
+  "team_code": "team07",
+  "unit": "execution-ood",
+  "target": {
+    "metric": "accuracy_gsma_rule",
+    "value": 0.1,
+    "direction": ">="
+  },
+  "test_set": "data/testsets/execution_telemath_official.jsonl",
+  "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v2",
+  "grader": "gsma-evals-telemath@708f1c5",
+  "git_commit": "1427f6ad1840fe7597654a263e2b22f51ce50649",
+  "declared_at": "2026-11-02T09:02:12+00:00",
+  "note": "Adapter team07-lora-v2 from run 2026-11-02T08-40-train-lora-02. Official TeleMath, GSMA protocol unchanged from the v1 run (GSMA system prompt, last boxed number, rel/abs tol 0.01, greedy, max 1024 new tokens). v2 added 3,000 synthetic calculations (not TeleMath) in the GSMA prompt and boxed format. Same target as v1 (v1 0.062)."
+}

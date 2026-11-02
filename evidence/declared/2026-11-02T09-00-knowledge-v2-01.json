@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T09-00-knowledge-v2-01",
+  "team_code": "team07",
+  "unit": "knowledge",
+  "target": {
+    "metric": "exact_match",
+    "value": 0.68,
+    "direction": ">="
+  },
+  "test_set": "testsets/knowledge_teleqna.jsonl",
+  "test_set_sha256": "7e15eb4a2dfd14a7bba1fc7c8f83ed80dd789d21fd1094094a0c883c912ebc24",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v2",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "1427f6ad1840fe7597654a263e2b22f51ce50649",
+  "declared_at": "2026-11-02T09:01:18+00:00",
+  "note": "Adapter team07-lora-v2 from run 2026-11-02T08-40-train-lora-02. Same target as the v1 tuned run (base 0.646, v1 0.738)."
+}

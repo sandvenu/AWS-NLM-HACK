@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T09-00-tsg-v2-01",
+  "team_code": "team07",
+  "unit": "classify-ood",
+  "target": {
+    "metric": "accuracy",
+    "value": 0.2,
+    "direction": ">="
+  },
+  "test_set": "data/testsets/classify_3gpp_tsg.jsonl",
+  "test_set_sha256": "a579e5de924ef924c9c017b1ceffd4bbdfe93c74be180a59584208e18f622f6b",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v2",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "1427f6ad1840fe7597654a263e2b22f51ce50649",
+  "declared_at": "2026-11-02T09:02:35+00:00",
+  "note": "Adapter team07-lora-v2 from run 2026-11-02T08-40-train-lora-02. Same target as the base prediction (base 2026-11-02T08-30-tsg-base-01 scored 0.1975). Nothing about working groups was trained."
+}
