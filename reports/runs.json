@@ -21,7 +21,8 @@
     "execution_ood_telemath_gsma_protocol": {
       "base": "2026-11-02T00-29-telemath-gsma-base-01",
       "tuned": "2026-11-02T00-29-telemath-gsma-tuned-01",
-      "tuned_v2": "2026-11-02T09-00-telemath-gsma-v2-01"
+      "tuned_v2": "2026-11-02T09-00-telemath-gsma-v2-01",
+      "tuned_v2_2k_tokens": "2026-11-02T10-20-telemath-gsma-v2-2k-01"
     },
     "execution_ood_telemath_team07_protocol": {
       "base": "2026-11-02T00-29-telemath-team07-base-01",
@@ -51,7 +52,12 @@
     "2026-11-02T00-29-telemath-gsma-tuned-01",
     "2026-11-02T00-29-telemath-team07-base-01",
     "2026-11-02T00-29-telemath-team07-tuned-01",
-    "2026-11-02T09-00-telemath-gsma-v2-01"
+    "2026-11-02T09-00-telemath-gsma-v2-01",
+    "2026-11-02T10-20-telemath-gsma-v2-2k-01"
   ],
-  "training_run_v2": "2026-11-02T08-40-train-lora-02"
+  "training_run_v2": "2026-11-02T08-40-train-lora-02",
+  "training_run_v3": "2026-11-02T10-20-train-lora-03",
+  "failed_runs": {
+    "2026-11-02T10-20-telemath-gsma-v2-vote5-01": "CUDA out of memory on ml.g5.2xlarge (batch 8 x 5 samples x 2,048 tokens); no records. Re-declared as 2026-11-02T11-30-telemath-gsma-v2-vote5-02."
+  }
 }

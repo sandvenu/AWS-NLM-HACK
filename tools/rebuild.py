@@ -181,6 +181,14 @@ def main():
                 lines.append(f"| {role} | {r['instance_type']} (${r['usd_per_hour']}/h) | {r['adapter_merged']} | {r['latency_p50_s']} | "
                              f"{r['latency_p95_s']} | {r['latency_mean_s']} | {r['tokens_per_s']} | {r['accuracy']:.4f} | "
                              f"{r['cost_per_1k_requests_usd']} | {r['cost_per_1k_correct_usd']} |")
+    failed = runs.get("failed_runs", {})
+    for run_id in failed:
+        if not os.path.exists(os.path.join(ROOT, "evidence", "declared", f"{run_id}.json")):
+            errors.append(f"{run_id}: listed as failed but never declared")
+    if failed:
+        card["failed_runs"] = failed
+        lines += ["", "Declared runs that failed (no records, no score; reported, not dropped):", ""]
+        lines += [f"- `{run_id}`: {why}" for run_id, why in failed.items()]
     text = "\n".join(lines)
     print(text)
     if args.write:
