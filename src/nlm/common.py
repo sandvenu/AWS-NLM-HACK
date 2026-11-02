@@ -116,7 +116,25 @@ def messages_for(unit, item, grader=GRADER_ID):
     if unit == "safety":
         sys_prompt = SAFETY_REVIEW_SYS if item["task"] == "review" else SAFETY_REQUEST_SYS
         return [{"role": "system", "content": sys_prompt}, {"role": "user", "content": item["question"]}]
+    if unit == "classify":  # GSMA 3gpp_tsg: the benchmark's own prompt carries the instructions and label list
+        return [{"role": "user", "content": item["question"]}]
     raise ValueError(unit)
+
+
+TSG_GROUPS = ("CT1", "CT3", "CT4", "CT6", "RAN1", "RAN2", "RAN3", "RAN4", "RAN5", "RAN_AH1",
+              "SA1", "SA2", "SA3", "SA4", "SA5", "SA6")
+_TSG = re.compile(r"\b(" + "|".join(sorted(TSG_GROUPS, key=len, reverse=True)) + r")\b")
+_TSG_JSON = re.compile(r"WORKING GROUP\"?\s*:\s*\"?\s*([A-Z_0-9]+)", re.IGNORECASE)
+
+
+def parse_tsg(text):
+    """Working group from {"WORKING GROUP": "X"}; else the first group name in the reply."""
+    t = _THINK.sub("", text)
+    m = _TSG_JSON.search(t)
+    if m and m.group(1).upper() in TSG_GROUPS:
+        return m.group(1).upper()
+    m = _TSG.search(t)
+    return m.group(1) if m else None
 
 
 # ---------- parsers ----------
@@ -186,6 +204,9 @@ def grade(unit, item, output, grader=GRADER_ID):
         return {"parsed": pred or None, "gold": item["answer"], "correct": gsma_telemath_correct(pred, item["answer"])}
     if unit == "safety":
         pred = parse_decision(output)
+        return {"parsed": pred, "gold": item["answer"], "correct": pred == item["answer"]}
+    if unit == "classify":
+        pred = parse_tsg(output)
         return {"parsed": pred, "gold": item["answer"], "correct": pred == item["answer"]}
     if unit == "knowledge":
         pred = parse_letter(output)

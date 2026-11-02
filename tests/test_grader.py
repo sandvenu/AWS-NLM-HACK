@@ -2,7 +2,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
-from nlm.common import num_correct, parse_decision, parse_letter, parse_number  # noqa: E402
+from nlm.common import num_correct, parse_decision, parse_letter, parse_number, parse_tsg  # noqa: E402
 from nlm.safety_gen import check_review, generate  # noqa: E402
 
 
@@ -45,6 +45,13 @@ def test_parse_decision():
         assert parse_decision(text) == want, (text, parse_decision(text))
 
 
+def test_parse_tsg():
+    cases = {'{"WORKING GROUP": "RAN_AH1"}': "RAN_AH1", '{"WORKING GROUP": "SA2"}': "SA2", "It is RAN1.": "RAN1",
+             '{"working group": "ct4"}': "CT4", "RAN12 is not a group": None, "no idea": None}
+    for text, want in cases.items():
+        assert parse_tsg(text) == want, (text, parse_tsg(text))
+
+
 def test_safety_labels_follow_policy():
     for it in generate(7301, 320, 160):
         if it["task"] == "review":
@@ -56,5 +63,6 @@ if __name__ == "__main__":
     test_parse_letter()
     test_tolerance()
     test_parse_decision()
+    test_parse_tsg()
     test_safety_labels_follow_policy()
     print("grader tests passed")

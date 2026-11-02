@@ -44,6 +44,24 @@
       "licence": "Apache-2.0 (team07 generated, synthetic)",
       "build": "PYTHONPATH=src python -m nlm.safety_gen --seed 7301 --n-review 320 --n-request 160 --out testsets/safety_ran.jsonl",
       "frozen_at": "2026-11-02T07:50:16+00:00"
+    },
+    "data/testsets/knowledge_srsranbench.jsonl": {
+      "unit": "knowledge-ood",
+      "sha256": "476aaeb232548559b789d82065c5f07ade99fbeba62bf163977033106eb338f8",
+      "items": 1502,
+      "source": "official srsRAN-Bench test split, config srsranbench (1,502 MCQ on the srsRAN 5G codebase), parquet sha256 f59c40de70add5a4cce8513f7652ab4f95cdd15864b148e173f326403be48198; options shuffled with seed 7401 (76% of official answers are option 1); GSMA/ot-full rev 6319806f04783eafe04d9facf755d379c66b7664 (user download; s3://bb26-p-team07-data-041915167631-use2/nlm-track1/data/raw/GSMA/ot-full/). NOT in Git; copy at s3://bb26-p-team07-data-041915167631-use2/nlm-track1/testsets/",
+      "licence": "GSMA/ot-full card: MIT (kept out of Git with the other official splits)",
+      "build": "python tools/build_ood.py --otfull data/raw/GSMA/ot-full",
+      "frozen_at": "2026-11-02T08:18:39+00:00"
+    },
+    "data/testsets/classify_3gpp_tsg.jsonl": {
+      "unit": "classify-ood",
+      "sha256": "a579e5de924ef924c9c017b1ceffd4bbdfe93c74be180a59584208e18f622f6b",
+      "items": 2000,
+      "source": "official 3GPP-TSG test split, config 3gpp_tsg (2,000 3GPP document excerpts, 16 working-group labels), parquet sha256 1a8607099873455d9079bfbb19dfcfc6fd796973f2242eb44e1a3232a1943104; benchmark prompt used verbatim; GSMA/ot-full rev 6319806f04783eafe04d9facf755d379c66b7664 (user download; s3://bb26-p-team07-data-041915167631-use2/nlm-track1/data/raw/GSMA/ot-full/). NOT in Git; copy at s3://bb26-p-team07-data-041915167631-use2/nlm-track1/testsets/",
+      "licence": "GSMA/ot-full card: MIT (kept out of Git with the other official splits)",
+      "build": "python tools/build_ood.py --otfull data/raw/GSMA/ot-full",
+      "frozen_at": "2026-11-02T08:18:40+00:00"
     }
   }
 }
