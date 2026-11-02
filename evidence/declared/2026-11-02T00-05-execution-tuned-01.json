@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T00-05-execution-tuned-01",
+  "team_code": "team07",
+  "unit": "execution",
+  "target": {
+    "metric": "accuracy_rel2pct",
+    "value": 0.6,
+    "direction": ">="
+  },
+  "test_set": "testsets/execution_telemath_synth.jsonl",
+  "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v1",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "ee07fd93a16f7416f68192a9bc701b886686550e",
+  "declared_at": "2026-11-02T00:06:14+00:00",
+  "note": "Tuned model (adapter from run 2026-11-01T23-39-train-lora-01). Unit target unchanged from the baseline declaration (base 0.150, run 2026-11-01T23-31-execution-base-01)."
+}
