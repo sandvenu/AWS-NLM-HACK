@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T08-40-train-lora-02",
+  "team_code": "team07",
+  "unit": "training",
+  "target": {
+    "metric": "train_completes",
+    "value": 1.0,
+    "direction": ">="
+  },
+  "test_set": null,
+  "test_set_sha256": null,
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v2",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "fa9e36931918d629f5dae6444b3c413bbf3cf1b6",
+  "declared_at": "2026-11-02T08:16:35+00:00",
+  "note": "LoRA SFT, same recipe as team07-lora-v1 (r=32, alpha=64, all-linear, 1 epoch, lr 2e-4, max_seq_len 1024), on data/train/train_v2.jsonl sha256 0e016badcbae1240755170dc7cc434e7ac146e1cfa5622ff180085494c984dd7 (20,456 rows: v1's 6,000 synthetic execution + 9,476 TeleQnA non-test, plus 3,000 synthetic calculations in the GSMA TeleMath prompt and boxed format, seed 8212, plus 1,500 safety change reviews, seed 8302, test questions banned, plus 480 safety requests from training-only templates). Goal: fix the Safety regression (GAPS G-17) and lift official TeleMath (GAPS G-12) without losing Knowledge, Execution or Price/Latency. Adapter scored by separately declared runs."
+}
