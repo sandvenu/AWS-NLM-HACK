@@ -17,7 +17,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "src"))
-from nlm.common import GRADER_ID, grade, num_correct, price_latency, read_jsonl, sha256_file, sha256_text, summarise  # noqa: E402
+from nlm.common import GRADER_ID, grade, majority_vote, num_correct, price_latency, read_jsonl, sha256_file, sha256_text, summarise  # noqa: E402
 
 _times_path = os.path.join(ROOT, "evidence", "aws_job_times.json")
 AWS_TIMES = json.load(open(_times_path, encoding="utf-8")) if os.path.exists(_times_path) else {}
@@ -96,6 +96,9 @@ def rebuild_run(run_id, manifest, errors, s3_only=()):
         g = grade(gunit, items[r["item_id"]], r["output"], decl["grader"])
         if g["correct"] != r["correct"]:
             errors.append(f"{run_id}: record {r['item_id']} verdict {r['correct']} != regraded {g['correct']}")
+        if "samples" in r and (r["samples"][r["vote_pick"]] != r["output"] or majority_vote(
+                gunit, items[r["item_id"]], r["samples"], decl["grader"]) != (r["vote_pick"], r["vote_count"])):
+            errors.append(f"{run_id}: record {r['item_id']} majority vote does not re-run to the stored pick")
         regraded.append({**r, **g})
     if len(records) != len(items):
         errors.append(f"{run_id}: {len(records)} records for {len(items)} test items")

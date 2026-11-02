@@ -20,7 +20,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 sys.path.insert(0, os.path.dirname(__file__))
-from nlm.common import GRADER_ID, grade, messages_for, read_jsonl, sha256_file, sha256_text, summarise  # noqa: E402
+from nlm.common import GRADER_ID, grade, majority_vote, messages_for, read_jsonl, sha256_file, sha256_text, summarise  # noqa: E402
 
 
 def now():
@@ -41,6 +41,10 @@ def main():
     ap.add_argument("--grader", default=GRADER_ID)
     ap.add_argument("--merge_adapter", type=int, default=0, help="1: merge the LoRA into the base weights, as served")
     ap.add_argument("--warmup", type=int, default=0, help="untimed, unrecorded generations before the first item")
+    ap.add_argument("--num_samples", type=int, default=1, help=">1: sample k answers per item and keep the majority answer")
+    ap.add_argument("--temperature", type=float, default=0.7)
+    ap.add_argument("--top_p", type=float, default=0.95)
+    ap.add_argument("--sample_seed", type=int, default=1234)
     args, _ = ap.parse_known_args()
 
     run_id = args.run_id
@@ -94,6 +98,14 @@ def main():
     if args.warmup:
         torch.cuda.synchronize()
         log(f"warmup done ({args.warmup} generations)")
+    k = args.num_samples
+    if k > 1:
+        torch.manual_seed(args.sample_seed)
+        gen_kw = dict(do_sample=True, temperature=args.temperature, top_p=args.top_p, top_k=None, num_return_sequences=k)
+        decoding = f"sampled k={k}, temperature={args.temperature}, top_p={args.top_p}, seed={args.sample_seed}, majority vote; enable_thinking=False"
+    else:
+        gen_kw = dict(do_sample=False, temperature=None, top_p=None, top_k=None)
+        decoding = "greedy, enable_thinking=False"
     records = []
     t_all = time.time()
     for b in range(0, len(items), args.batch_size):
@@ -102,16 +114,19 @@ def main():
         started = now()
         t0 = time.time()
         with torch.inference_mode():
-            out = model.generate(**enc, max_new_tokens=max_new, do_sample=False, temperature=None, top_p=None,
-                                 top_k=None, pad_token_id=tok.pad_token_id)
+            out = model.generate(**enc, max_new_tokens=max_new, pad_token_id=tok.pad_token_id, **gen_kw)
         torch.cuda.synchronize()
         wall = time.time() - t0
         finished = now()
         gen = out[:, enc["input_ids"].shape[1]:]
-        for it, p, ids in zip(batch_items, batch_prompts, gen):
-            ids = ids.tolist()
-            n_tok = sum(1 for t in ids if t != tok.pad_token_id)
-            text = tok.decode(ids, skip_special_tokens=True)
+        for j, (it, p) in enumerate(zip(batch_items, batch_prompts)):
+            texts, ntoks = [], []
+            for ids in gen[j * k:(j + 1) * k]:
+                ids = ids.tolist()
+                ntoks.append(sum(1 for t in ids if t != tok.pad_token_id))
+                texts.append(tok.decode(ids, skip_special_tokens=True))
+            pick, votes = majority_vote(args.unit, it, texts, args.grader) if k > 1 else (0, 1)
+            text, n_tok = texts[pick], ntoks[pick]
             rec = {"run_id": run_id, "unit": args.unit, "item_id": it["id"], "model_id": args.model_id,
                    "adapter_id": args.adapter_id, "grader": args.grader, "test_set_sha256": test_sha,
                    "prompt_sha256": sha256_text(p), "output": text, "output_sha256": sha256_text(text),
@@ -121,6 +136,8 @@ def main():
                    "instance_type": instance_type, "adapter_merged": bool(args.merge_adapter)}
             if "task" in it:
                 rec["task"] = it["task"]
+            if k > 1:  # every sample kept, so the vote can be re-run offline
+                rec.update(samples=texts, sample_tokens=ntoks, vote_pick=pick, vote_count=votes)
             rec.update(grade(args.unit, it, text, args.grader))
             records.append(rec)
             log(f"RECORD item={it['id']} parsed={rec['parsed']} gold={rec['gold']} correct={rec['correct']} "
@@ -132,7 +149,7 @@ def main():
                "training_job_name": os.environ.get("TRAINING_JOB_NAME"), "instance_type": instance_type,
                "gpu": torch.cuda.get_device_name(0), "batch_size": args.batch_size, "max_new_tokens": max_new,
                "adapter_merged": bool(args.merge_adapter), "warmup": args.warmup,
-               "decoding": "greedy, enable_thinking=False", "total_wall_s": round(time.time() - t_all, 2),
+               "num_samples": k, "decoding": decoding, "total_wall_s": round(time.time() - t_all, 2),
                "finished_at": now()}
     summary.update(summarise(args.unit, records))
     log(f"SUMMARY {json.dumps(summary)}")

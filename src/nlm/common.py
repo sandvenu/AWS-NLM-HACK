@@ -217,6 +217,33 @@ def grade(unit, item, output, grader=GRADER_ID):
             "correct_loose": num_correct(pred, item["answer"], EXEC_REL_TOL_LOOSE)}
 
 
+def _same_answer(a, b):
+    try:  # numbers agree within the GSMA tolerance; anything else must match exactly
+        return math.isclose(float(a), float(b), rel_tol=0.01, abs_tol=0.01)
+    except (TypeError, ValueError):
+        return a == b
+
+
+def majority_vote(unit, item, texts, grader=GRADER_ID):
+    """Self-consistency: parse every sample (no gold used) and return (index of the first sample in the largest
+    group of agreeing answers, group size). Ties go to the group seen first; no parsed answer -> sample 0."""
+    parsed = [grade(unit, item, t, grader)["parsed"] for t in texts]
+    groups = []  # [first index, size]
+    for i, p in enumerate(parsed):
+        if p is None:
+            continue
+        for g in groups:
+            if _same_answer(parsed[g[0]], p):
+                g[1] += 1
+                break
+        else:
+            groups.append([i, 1])
+    if not groups:
+        return 0, 0
+    best = max(groups, key=lambda g: g[1])  # max keeps the first of equal sizes
+    return best[0], best[1]
+
+
 def summarise(unit, records):
     n = len(records)
     out = {"n": n, "accuracy": sum(r["correct"] for r in records) / n if n else 0.0,

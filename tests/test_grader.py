@@ -52,6 +52,15 @@ def test_parse_tsg():
         assert parse_tsg(text) == want, (text, parse_tsg(text))
 
 
+def test_majority_vote():
+    from nlm.common import GSMA_TELEMATH_GRADER, majority_vote
+    item = {"answer": 5.0}
+    texts = ["$\\boxed{4}$", "$\\boxed{5.001}$", "no answer", "$\\boxed{5}$", "$\\boxed{4.0}$"]
+    assert majority_vote("execution", item, texts, GSMA_TELEMATH_GRADER) == (0, 2)  # tie: first group wins
+    assert majority_vote("execution", item, texts[1:], GSMA_TELEMATH_GRADER) == (0, 2)
+    assert majority_vote("execution", item, ["x", "y"], GSMA_TELEMATH_GRADER) == (0, 0)
+
+
 def test_safety_labels_follow_policy():
     for it in generate(7301, 320, 160):
         if it["task"] == "review":
