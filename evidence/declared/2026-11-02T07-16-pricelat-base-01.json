@@ -1,0 +1,27 @@
+{
+  "run_id": "2026-11-02T07-16-pricelat-base-01",
+  "team_code": "team07",
+  "unit": "price-latency",
+  "target": {
+    "metric": "latency_p95_s",
+    "value": 5.0,
+    "direction": "<="
+  },
+  "test_set": "testsets/execution_telemath_synth.jsonl",
+  "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "none",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "5d37e402c4cfa9723303465ff3a5f033a5dfaf23",
+  "declared_at": "2026-11-02T07:17:03+00:00",
+  "note": "Price/Latency unit. First 120 items of the frozen Execution set (5 per family, 24 families), Execution prompt and rule-based parser, greedy, batch size 1 (one request at a time), max 640 new tokens, 2 untimed warm-up generations, ml.g6.2xlarge. Cost = on-demand SageMaker Hosting price (evidence/pricing.json, 1.222 USD/h) x per-request wall time. Same targets for base and tuned; prediction: tuned passes, base fails (longer outputs, few correct).",
+  "grading_unit": "execution",
+  "limit": 120,
+  "also_targets": [
+    {
+      "metric": "cost_per_1k_correct_usd",
+      "value": 1.5,
+      "direction": "<="
+    }
+  ]
+}
