@@ -21,7 +21,7 @@ from nlm.common import GRADER_ID, grade, num_correct, read_jsonl, sha256_file, s
 
 _times_path = os.path.join(ROOT, "evidence", "aws_job_times.json")
 AWS_TIMES = json.load(open(_times_path, encoding="utf-8")) if os.path.exists(_times_path) else {}
-METRIC_KEY = {"exact_match": "accuracy", "accuracy_rel2pct": "accuracy", "accuracy_rel5pct": "accuracy_loose_5pct"}
+METRIC_KEY = {"exact_match": "accuracy", "accuracy_rel2pct": "accuracy", "accuracy_gsma_rule": "accuracy", "accuracy_rel5pct": "accuracy_loose_5pct"}
 
 
 def check_target(decl, summary):

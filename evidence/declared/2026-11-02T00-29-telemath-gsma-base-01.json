@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T00-29-telemath-gsma-base-01",
+  "team_code": "team07",
+  "unit": "execution-ood",
+  "target": {
+    "metric": "accuracy_gsma_rule",
+    "value": 0.1,
+    "direction": ">="
+  },
+  "test_set": "data/testsets/execution_telemath_official.jsonl",
+  "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "none",
+  "grader": "gsma-evals-telemath@708f1c5",
+  "git_commit": "ecc66ed3210b79591c3cdb75e2cd019079d947cb",
+  "declared_at": "2026-11-02T00:29:09+00:00",
+  "note": "Out-of-distribution check on the official TeleMath test split (500), GSMA official prompt and scorer (gsma-labs/evals@708f1c5: boxed answer, isclose rel_tol=0.01 abs_tol=0.01). Prediction: tuned >= 0.10."
+}
