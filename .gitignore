@@ -6,3 +6,6 @@ __pycache__/
 *.pyc
 .env
 dev.env
+
+# Official TeleMath per-item records contain the benchmark answer key: S3 only (evidence/records/<run_id>/records.jsonl)
+evidence/records/*-telemath-*/records.jsonl

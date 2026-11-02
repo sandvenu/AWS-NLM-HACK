@@ -118,3 +118,13 @@ waited more than about a minute.
 - `tools/rebuild.py` first mis-graded the ORAN-Bench records: it graded unit `knowledge-ood` with the numeric
   parser. The stored verdicts were right and the rebuild tool was fixed. No record or declaration was changed.
 
+
+## Publication limits
+
+**G-15: Official TeleMath per-item records are not in the public repository.** They contain the TeleMath answer
+key (the gold value per item) and model outputs that restate the problems; the TeleMath authors ask that the data
+not be redistributed. The four runs' `records.jsonl` stay in the team bucket at
+`s3://bb26-p-team07-data-041915167631-use2/evidence/records/<run_id>/records.jsonl` (readable by the live-test
+command); their declarations and `summary.json` are in Git. Offline `tools/rebuild.py` therefore reports these four
+runs from `summary.json` without re-grading them. The ORAN-Bench and team07 test-set records are in Git and are
+re-graded offline.

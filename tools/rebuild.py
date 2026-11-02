@@ -33,10 +33,28 @@ def check_target(decl, summary):
     return value, "PASS" if ok else "FAIL"
 
 
-def rebuild_run(run_id, manifest, errors):
+def summary_only(run_id, decl, manifest, errors):
+    """Runs whose per-item records hold a non-redistributable answer key: records stay in S3
+    (s3://<bucket>/evidence/records/<run_id>/records.jsonl); report the committed summary."""
+    summary = json.load(open(os.path.join(ROOT, "evidence", "records", run_id, "summary.json"), encoding="utf-8"))
+    if summary["test_set_sha256"] != decl["test_set_sha256"] or manifest.get(decl["test_set"], {}).get("sha256") != decl["test_set_sha256"]:
+        errors.append(f"{run_id}: summary/declaration/MANIFEST test-set hashes disagree")
+    value, verdict = check_target(decl, summary)
+    keep = {k: summary[k] for k in ("n", "accuracy", "unparsed", "latency_p50_s", "latency_p95_s") if k in summary}
+    return {"run_id": run_id, "unit": decl["unit"], "model_id": decl["model_id"], "adapter_id": decl["adapter_id"],
+            "target": decl["target"], "declared_at": decl["declared_at"], "test_set_sha256": decl["test_set_sha256"],
+            "metric_value": value, "check": verdict, "times_agree_with_aws": "records in S3 only",
+            "grader": decl["grader"], "test_set": decl["test_set"],
+            "test_set_check": "records in S3 only (answer key not redistributable); summary reported, not re-graded offline",
+            **keep}
+
+
+def rebuild_run(run_id, manifest, errors, s3_only=()):
     decl = json.load(open(os.path.join(ROOT, "evidence", "declared", f"{run_id}.json"), encoding="utf-8"))
     rec_path = os.path.join(ROOT, "evidence", "records", run_id, "records.jsonl")
     if not os.path.exists(rec_path):
+        if run_id in s3_only:
+            return summary_only(run_id, decl, manifest, errors)
         errors.append(f"{run_id}: no records at {rec_path}")
         return None
     test_rel = decl["test_set"]
@@ -103,7 +121,7 @@ def main():
     for unit, roles in runs["units"].items():
         card["units"][unit] = {}
         for role, run_id in roles.items():
-            res = rebuild_run(run_id, manifest, errors)
+            res = rebuild_run(run_id, manifest, errors, runs.get("s3_only_records", []))
             if res:
                 card["units"][unit][role] = res
         base, tuned = card["units"][unit].get("base"), card["units"][unit].get("tuned")
