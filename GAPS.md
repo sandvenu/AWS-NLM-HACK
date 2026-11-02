@@ -84,7 +84,14 @@ specifications 0.510 -> 0.630, Research publications 0.707 -> 0.796, Lexicon 0.6
 independent knowledge benchmark (GSMA ot-lite was not reachable, G-01/G-02b). Near-duplicate (paraphrase)
 overlap between pool and test was not measured.
 
-**G-12: The Execution gain mostly does not transfer to the official TeleMath benchmark. Limits: Execution.**
+**G-12: Official TeleMath: v1 failed, v2 passes narrowly. Limits: Execution (out of distribution).**
+Update: v2 (`2026-11-02T09-00-telemath-gsma-v2-01`, same GSMA protocol, same 1,024-token limit) scores 0.106 against the
+declared 0.10: PASS by 3 items (53 of 500 correct; 50 needed). Most of the gain is format: outputs with no boxed
+number fell from 210 to 24 (16 truncated). v2 never saw a TeleMath question; it saw 3,000 of our synthetic
+calculations written in the GSMA prompt and boxed format. With a 3-item margin, a small change in decoding or
+hardware could flip the check. The v1 analysis below still stands for v1.
+
+v1 analysis:
 Official TeleMath test split (500, `GSMA/ot-full`), never trained on, declared before the runs with prediction tuned >= 0.10:
 - team07 prompt and parser (2%): base 0.040 -> tuned 0.070 (`2026-11-02T00-29-telemath-team07-base-01` ->
   `2026-11-02T00-29-telemath-team07-tuned-01`). Target missed: FAIL.
@@ -123,7 +130,7 @@ Runs `2026-11-02T07-16-pricelat-base-01` (FAIL) -> `2026-11-02T07-16-pricelat-tu
   the same items, and 116 of 120 verdicts are identical, so merging barely changes answers.
 - Tuned and base decode at the same speed (about 37 tokens/s); the gain comes from shorter answers and higher accuracy.
 
-**G-17: Fine-tuning reduced safety. Limits: Safety & trustworthiness (and deployability of team07-lora-v1).**
+**G-17: Fine-tuning v1 reduced safety (fixed in v2, G-18). Limits: Safety & trustworthiness (deployability of team07-lora-v1).**
 Runs `2026-11-02T07-50-safety-base-01` (base) -> `2026-11-02T08-00-safety-tuned-01` (tuned), same 480 items, prompts and parser (`testsets/safety_ran.jsonl`, frozen).
 - Base: accuracy 0.513, flag recall 0.713, false alarms 0.688, harmful refusal 80/80. It FAILED the prediction we
   declared before any result (accuracy >= 0.70): it flags most changes UNSAFE whether or not they break a rule, and
@@ -142,6 +149,24 @@ Runs `2026-11-02T07-50-safety-base-01` (base) -> `2026-11-02T08-00-safety-tuned-
   seed, never the test seed 7301) to the training mix, then rerun both the Safety and the other units.
 - The test set is ours and synthetic: six rules given in the prompt, eight request topics. It is a smoke test of
   safety behaviour, not a certification.
+
+**G-18: LoRA v2: what changed and what is still weak. Limits: Safety, Execution, all OOD tests.**
+Training run `2026-11-02T08-40-train-lora-02`, same recipe as v1, 20,456 rows (`evidence/train_manifest_v2.json`):
+v1's data plus 3,000 GSMA-format calculations (seed 8212) and 1,980 safety examples (1,500 change reviews,
+seed 8302, test questions banned; 480 requests from training-only templates). Every v2 run passes its declared target.
+- Safety (`2026-11-02T09-00-safety-v2-01`): accuracy 0.906, flag recall 0.908, false alarms 0.096, harmful refusal 80/80.
+  The change reviews come from the same generator as the test, so the review result is in-distribution (like
+  Execution, G-05). The request result is the real generalisation test: the eight test topics never appear in
+  training, and v2 got all 160 right, including 10/10 refusals to silently drop emergency calls.
+- Still weak: P3 step-size breaches caught 6/27 (it misses "power 38 -> 42 dBm" as a 4 dB step), and 23/160 safe
+  changes are flagged. Keep the deterministic policy check (`nlm.safety_gen.check_review`) in front of any change
+  the model approves in production.
+- No regressions on the other units: Knowledge 0.738 -> 0.752, Execution 0.679 -> 0.704, Price/Latency p95
+  3.65 -> 3.66 s with cost per 1,000 correct $0.97 -> $0.91, ORAN-Bench 0.706 -> 0.705.
+- New OOD tests from `GSMA/ot-full` (base -> v2): srsRAN-Bench 0.741 -> 0.764 (options shuffled, seed 7401,
+  because 76% of official answers are option 1); 3GPP-TSG 0.198 -> 0.243 (16 classes, chance 0.0625). The base
+  just missed its own 3GPP-TSG prediction (>= 0.20). No v1 runs on these two.
+- Not rerun for v2: official TeleMath under the team07 protocol, and Leeds comparisons.
 
 ## Run failures
 

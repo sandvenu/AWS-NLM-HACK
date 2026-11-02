@@ -3,21 +3,25 @@
   "units": {
     "knowledge": {
       "base": "2026-11-01T23-35-knowledge-base-01",
-      "tuned": "2026-11-02T00-05-knowledge-tuned-01"
+      "tuned": "2026-11-02T00-05-knowledge-tuned-01",
+      "tuned_v2": "2026-11-02T09-00-knowledge-v2-01"
     },
     "execution": {
       "base": "2026-11-01T23-31-execution-base-01",
       "tuned": "2026-11-02T00-05-execution-tuned-01",
       "leeds_v2": "2026-11-01T23-31-execution-leedsv2-01",
-      "leeds_v3": "2026-11-01T23-31-execution-leedsv3-01"
+      "leeds_v3": "2026-11-01T23-31-execution-leedsv3-01",
+      "tuned_v2": "2026-11-02T09-00-execution-v2-01"
     },
     "knowledge_ood_oranbench": {
       "base": "2026-11-02T00-55-oranbench-base-01",
-      "tuned": "2026-11-02T00-55-oranbench-tuned-01"
+      "tuned": "2026-11-02T00-55-oranbench-tuned-01",
+      "tuned_v2": "2026-11-02T09-00-oranbench-v2-01"
     },
     "execution_ood_telemath_gsma_protocol": {
       "base": "2026-11-02T00-29-telemath-gsma-base-01",
-      "tuned": "2026-11-02T00-29-telemath-gsma-tuned-01"
+      "tuned": "2026-11-02T00-29-telemath-gsma-tuned-01",
+      "tuned_v2": "2026-11-02T09-00-telemath-gsma-v2-01"
     },
     "execution_ood_telemath_team07_protocol": {
       "base": "2026-11-02T00-29-telemath-team07-base-01",
@@ -25,17 +29,29 @@
     },
     "price_latency": {
       "base": "2026-11-02T07-16-pricelat-base-01",
-      "tuned": "2026-11-02T07-16-pricelat-tuned-01"
+      "tuned": "2026-11-02T07-16-pricelat-tuned-01",
+      "tuned_v2": "2026-11-02T09-00-pricelat-v2-01"
     },
     "safety": {
       "base": "2026-11-02T07-50-safety-base-01",
-      "tuned": "2026-11-02T08-00-safety-tuned-01"
+      "tuned": "2026-11-02T08-00-safety-tuned-01",
+      "tuned_v2": "2026-11-02T09-00-safety-v2-01"
+    },
+    "knowledge_ood_srsranbench": {
+      "base": "2026-11-02T08-30-srsran-base-01",
+      "tuned_v2": "2026-11-02T09-00-srsran-v2-01"
+    },
+    "classify_ood_3gpp_tsg": {
+      "base": "2026-11-02T08-30-tsg-base-01",
+      "tuned_v2": "2026-11-02T09-00-tsg-v2-01"
     }
   },
   "s3_only_records": [
     "2026-11-02T00-29-telemath-gsma-base-01",
     "2026-11-02T00-29-telemath-gsma-tuned-01",
     "2026-11-02T00-29-telemath-team07-base-01",
-    "2026-11-02T00-29-telemath-team07-tuned-01"
-  ]
+    "2026-11-02T00-29-telemath-team07-tuned-01",
+    "2026-11-02T09-00-telemath-gsma-v2-01"
+  ],
+  "training_run_v2": "2026-11-02T08-40-train-lora-02"
 }

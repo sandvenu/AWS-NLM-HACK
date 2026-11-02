@@ -47,18 +47,27 @@ Environment: `AWS_PROFILE=fyuz`, region us-east-2, Python ≥ 3.11 with `boto3` 
 
 ## Results
 
-| Unit | Metric | Untuned base | Tuned (team07-lora-v1) | Delta | Declared target (tuned) | Check |
-|---|---|---|---|---|---|---|
-| Knowledge (TeleQnA, 500) | exact match | 0.646 | **0.738** | +9.2 pp | >= 0.68 | PASS |
-| Execution (synthetic telecom math, 480) | within 2% rel. error | 0.150 | **0.679** | +52.9 pp | >= 0.60 | PASS |
-| Price/Latency (first 120 Execution items, one request at a time, ml.g6.2xlarge) | p95 latency <= 5.0 s **and** <= $1.50 per 1,000 correct answers | 6.72 s, $7.75 (FAIL) | **3.65 s, $0.97** | -3.06 s, -$6.78 | both | PASS |
-| Safety & trustworthiness (480 synthetic: 320 RAN change reviews, 160 requests) | no regression vs base: accuracy >= 0.4925, flag recall >= 0.6925, harmful refusal >= 0.95 | 0.513 acc, 0.713 recall, 1.00 refusal (FAIL vs its 0.70 prediction) | 0.619 acc, **0.504 recall, 0.925 refusal** | +10.6 pp acc, -20.8 pp recall | all three | **FAIL** |
+**Submitted adapter: `team07-lora-v2`** (training run `2026-11-02T08-40-train-lora-02`). v1 is kept as the first
+iteration: it passed Knowledge, Execution and Price/Latency but failed Safety, so v2 added safety and GSMA-format
+examples to the training mix (DATA.md). Every number below has a target declared before its run.
 
-**Safety finding: the fine-tune made the model less safe** (runs `2026-11-02T07-50-safety-base-01` -> `2026-11-02T08-00-safety-tuned-01`). Accuracy rose only because the tuned
-model says SAFE far more often (false alarms 0.69 -> 0.27). It now misses every numeric policy breach (power, tilt,
-step size, missing approval: 0/108, base 39/108), and it agreed to 6 of 10 requests to silently drop emergency calls,
-which the base refused 10/10. No safety data was in the LoRA training mix. Do not deploy this adapter without a
-rule-based policy guard in front of it and safety examples in the training mix (GAPS G-17).
+| Unit | Metric | Untuned base | v1 | **v2 (submitted)** | Declared target (v2) | v2 check |
+|---|---|---|---|---|---|---|
+| Knowledge (TeleQnA, 500) | exact match | 0.646 | 0.738 | **0.752** | >= 0.68 | PASS |
+| Execution (synthetic telecom math, 480) | within 2% rel. error | 0.150 | 0.679 | **0.704** | >= 0.60 | PASS |
+| Price/Latency (first 120 Execution items, batch 1, ml.g6.2xlarge) | p95 latency; USD per 1,000 correct | 6.72 s; $7.75 | 3.65 s; $0.97 | **3.66 s; $0.91** | <= 5.0 s and <= $1.50 | PASS |
+| Safety & trustworthiness (480 synthetic) | accuracy; flag recall; false alarms; harmful refusal | 0.513; 0.713; 0.688; 1.00 | 0.619; 0.504; 0.267; 0.925 | **0.906; 0.908; 0.096; 1.00** | >= 0.70; >= 0.80; <= 0.20; >= 0.95 | PASS |
+
+Base runs fail Execution, Price/Latency and Safety targets; v1 failed Safety (it was less safe than the base: GAPS
+G-17). v2 refuses all 80 harmful requests, including 10/10 requests to silently drop emergency calls (a topic never
+in its training data; v1 accepted 6 of them), and helps with all 80 legitimate look-alikes. It still misses most
+breaches of the step-size rule (P3: 6/27) and wrongly flags 23 of 160 safe changes (GAPS G-18).
+
+Run ids (base -> v1 -> v2): knowledge `2026-11-01T23-35-knowledge-base-01` -> `2026-11-02T00-05-knowledge-tuned-01` ->
+`2026-11-02T09-00-knowledge-v2-01`; execution `2026-11-01T23-31-execution-base-01` -> `2026-11-02T00-05-execution-tuned-01` ->
+`2026-11-02T09-00-execution-v2-01`; price/latency `2026-11-02T07-16-pricelat-base-01` -> `2026-11-02T07-16-pricelat-tuned-01` ->
+`2026-11-02T09-00-pricelat-v2-01`; safety `2026-11-02T07-50-safety-base-01` -> `2026-11-02T08-00-safety-tuned-01` ->
+`2026-11-02T09-00-safety-v2-01`.
 
 Price/Latency detail (runs `2026-11-02T07-16-pricelat-base-01` -> `2026-11-02T07-16-pricelat-tuned-01`): greedy, batch size 1, 2 untimed warm-ups, tuned adapter merged
 into the base weights as it would be served. Cost = SageMaker on-demand Hosting price from the AWS Price List API
@@ -67,7 +76,8 @@ into the base weights as it would be served. Cost = SageMaker on-demand Hosting 
 | | p50 s | p95 s | mean s | tokens/s | accuracy (2%) | USD per 1k requests | USD per 1k correct |
 |---|---|---|---|---|---|---|---|
 | base | 2.15 | 6.72 | 2.86 | 36.9 | 0.125 | 0.97 | 7.75 |
-| tuned | 1.68 | 3.65 | 1.95 | 36.7 | 0.683 | 0.66 | 0.97 |
+| v1 | 1.68 | 3.65 | 1.95 | 36.7 | 0.683 | 0.66 | 0.97 |
+| v2 | 1.70 | 3.66 | 1.98 | 36.2 | 0.733 | 0.67 | 0.91 |
 
 Decoding speed is the same (about 37 tokens/s): merging the LoRA adds no serving cost. The tuned model is faster and
 cheaper because it writes shorter answers (it learned the `Final answer:` format), and it is right far more often,
@@ -75,18 +85,20 @@ so a correct answer costs 8x less. Limits in GAPS G-16.
 
 **Out-of-distribution checks** (official `GSMA/ot-full` test splits, never trained on, hashes frozen, files kept out of Git):
 
-| Test | Protocol | Base | Tuned | Delta | Declared prediction | Check |
+| Test | Protocol | Base | v1 | **v2** | Declared target (v2) | v2 check |
 |---|---|---|---|---|---|---|
-| ORAN-Bench (1,500 MCQ) | team07 knowledge prompt, exact match | 0.672 | 0.706 | +3.4 pp | >= 0.65 | PASS (base passes too, GAPS G-13) |
-| Official TeleMath (500) | GSMA official prompt + scorer (gsma-labs/evals@708f1c5) | 0.008 | 0.062 | +5.4 pp | >= 0.10 | FAIL |
-| Official TeleMath (500) | team07 prompt + parser, 2% | 0.040 | 0.070 | +3.0 pp | >= 0.10 | FAIL |
+| Official TeleMath (500) | GSMA official prompt + scorer (gsma-labs/evals@708f1c5) | 0.008 | 0.062 | **0.106** | >= 0.10 | PASS (by 3 items, GAPS G-12) |
+| ORAN-Bench (1,500 MCQ) | team07 knowledge prompt, exact match | 0.672 | 0.706 | **0.705** | >= 0.65 | PASS (base passes too, G-13) |
+| srsRAN-Bench (1,502 MCQ, options shuffled) | team07 knowledge prompt, exact match | 0.741 | - | **0.764** | >= 0.721 (no regression) | PASS |
+| 3GPP-TSG (2,000, 16 working groups) | benchmark prompt verbatim, label exact match | 0.198 | - | **0.243** | >= 0.20 | PASS |
+| Official TeleMath (500) | team07 prompt + parser, 2% | 0.040 | 0.070 | - | >= 0.10 | v1 FAIL (not rerun for v2) |
 
-The large synthetic Execution gain mostly does **not** transfer to real TeleMath (GAPS G-12).
+v2's TeleMath gain is mostly answer format: outputs with no `\boxed{}` number fell from 210 (v1) to 24, and correct
+answers rose from 31 to 53 of 500. It is 3 items above the target, so it is a narrow pass (GAPS G-12).
 
 The organisers' Leeds TeleMath LoRAs on the same Execution set: v2 0.129, v3 0.154. At a stricter 0.5% tolerance
-(information only) tuned 0.533 vs base 0.123. Run ids: knowledge `2026-11-01T23-35-knowledge-base-01` ->
-`2026-11-02T00-05-knowledge-tuned-01`; execution `2026-11-01T23-31-execution-base-01` ->
-`2026-11-02T00-05-execution-tuned-01`; training `2026-11-01T23-39-train-lora-01`. Read the caveats in GAPS.md
+(information only) base 0.123, v1 0.533, team07 v2 0.569. Training runs: v1 `2026-11-01T23-39-train-lora-01`, v2
+`2026-11-02T08-40-train-lora-02`. Read the caveats in GAPS.md
 (G-05, G-07 to G-11): Execution is in-distribution with our training generator, and part of its gain is answer-format compliance.
 
 See [`reports/scorecard.md`](reports/scorecard.md) (rebuilt from `evidence/` by `tools/rebuild.py`),
