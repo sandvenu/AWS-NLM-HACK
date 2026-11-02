@@ -11,6 +11,7 @@
           "value": 0.6,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-01T23:35:42+00:00",
         "test_set_sha256": "7e15eb4a2dfd14a7bba1fc7c8f83ed80dd789d21fd1094094a0c883c912ebc24",
         "metric_value": 0.646,
@@ -35,6 +36,7 @@
           "value": 0.68,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-02T00:06:00+00:00",
         "test_set_sha256": "7e15eb4a2dfd14a7bba1fc7c8f83ed80dd789d21fd1094094a0c883c912ebc24",
         "metric_value": 0.738,
@@ -62,6 +64,7 @@
           "value": 0.6,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-01T23:31:23+00:00",
         "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
         "metric_value": 0.15,
@@ -88,6 +91,7 @@
           "value": 0.6,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-02T00:06:14+00:00",
         "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
         "metric_value": 0.6791666666666667,
@@ -114,6 +118,7 @@
           "value": 0.6,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-01T23:31:37+00:00",
         "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
         "metric_value": 0.12916666666666668,
@@ -140,6 +145,7 @@
           "value": 0.6,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-01T23:31:54+00:00",
         "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
         "metric_value": 0.15416666666666667,
@@ -169,6 +175,7 @@
           "value": 0.65,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-02T00:55:28+00:00",
         "test_set_sha256": "70ebb276fc4b15f97c91d16aefbb8d8c5e34b69785411dba7f23da3954f1a71d",
         "metric_value": 0.672,
@@ -193,6 +200,7 @@
           "value": 0.65,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-02T00:55:54+00:00",
         "test_set_sha256": "70ebb276fc4b15f97c91d16aefbb8d8c5e34b69785411dba7f23da3954f1a71d",
         "metric_value": 0.706,
@@ -220,6 +228,7 @@
           "value": 0.1,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-02T00:29:09+00:00",
         "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
         "metric_value": 0.008,
@@ -245,6 +254,7 @@
           "value": 0.1,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-02T00:29:23+00:00",
         "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
         "metric_value": 0.062,
@@ -273,6 +283,7 @@
           "value": 0.1,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-02T00:29:37+00:00",
         "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
         "metric_value": 0.04,
@@ -299,6 +310,7 @@
           "value": 0.1,
           "direction": ">="
         },
+        "also_targets": [],
         "declared_at": "2026-11-02T00:29:52+00:00",
         "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
         "metric_value": 0.07,

@@ -176,3 +176,16 @@ def summarise(unit, records):
         out["latency_p50_s"] = lat[len(lat) // 2]
         out["latency_p95_s"] = lat[min(len(lat) - 1, int(len(lat) * 0.95))]
     return out
+
+
+def price_latency(records, usd_per_hour):
+    """Price/Latency unit metrics for single-request (batch 1) records: latency_s is one request's wall time.
+    Cost = instance on-demand price x wall time, so idle time between requests is not counted."""
+    n = len(records)
+    total_s = sum(r["latency_s"] for r in records)
+    n_correct = sum(r["correct"] for r in records)
+    cost = total_s * usd_per_hour / 3600
+    return {"usd_per_hour": usd_per_hour, "latency_mean_s": round(total_s / n, 4),
+            "tokens_per_s": round(sum(r["output_tokens"] for r in records) / total_s, 2),
+            "cost_per_1k_requests_usd": round(cost / n * 1000, 4),
+            "cost_per_1k_correct_usd": round(cost / n_correct * 1000, 4) if n_correct else None}

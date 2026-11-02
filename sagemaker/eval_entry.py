@@ -39,6 +39,8 @@ def main():
     ap.add_argument("--max_new_tokens", type=int, default=0)
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--grader", default=GRADER_ID)
+    ap.add_argument("--merge_adapter", type=int, default=0, help="1: merge the LoRA into the base weights, as served")
+    ap.add_argument("--warmup", type=int, default=0, help="untimed, unrecorded generations before the first item")
     args, _ = ap.parse_known_args()
 
     run_id = args.run_id
@@ -74,10 +76,24 @@ def main():
                 break
         model = PeftModel.from_pretrained(model, root)
         log(f"adapter loaded from {root}")
+        if args.merge_adapter:
+            model = model.merge_and_unload()
+            log("adapter merged into base weights")
     model.eval()
+    instance_type = os.environ.get("SM_CURRENT_INSTANCE_TYPE")
 
     prompts = [tok.apply_chat_template(messages_for(args.unit, it, args.grader), tokenize=False,
                                        add_generation_prompt=True, enable_thinking=False) for it in items]
+    for _ in range(args.warmup):  # CUDA kernels and caches, not measured
+        enc = tok([tok.apply_chat_template([{"role": "user", "content": "Say ready."}], tokenize=False,
+                                           add_generation_prompt=True, enable_thinking=False)],
+                  return_tensors="pt", add_special_tokens=False).to("cuda")
+        with torch.inference_mode():
+            model.generate(**enc, max_new_tokens=16, do_sample=False, temperature=None, top_p=None, top_k=None,
+                           pad_token_id=tok.pad_token_id)
+    if args.warmup:
+        torch.cuda.synchronize()
+        log(f"warmup done ({args.warmup} generations)")
     records = []
     t_all = time.time()
     for b in range(0, len(items), args.batch_size):
@@ -101,7 +117,8 @@ def main():
                    "prompt_sha256": sha256_text(p), "output": text, "output_sha256": sha256_text(text),
                    "output_tokens": n_tok, "truncated": n_tok >= max_new, "batch_started_at": started,
                    "batch_finished_at": finished, "batch_wall_s": round(wall, 4),
-                   "latency_s": round(wall / len(batch_items), 4)}
+                   "latency_s": round(wall / len(batch_items), 4), "batch_size": args.batch_size,
+                   "instance_type": instance_type, "adapter_merged": bool(args.merge_adapter)}
             rec.update(grade(args.unit, it, text, args.grader))
             records.append(rec)
             log(f"RECORD item={it['id']} parsed={rec['parsed']} gold={rec['gold']} correct={rec['correct']} "
@@ -110,8 +127,9 @@ def main():
 
     summary = {"run_id": run_id, "unit": args.unit, "model_id": args.model_id, "adapter_id": args.adapter_id,
                "grader": args.grader, "test_set_sha256": test_sha, "test_file": args.test_file,
-               "training_job_name": os.environ.get("TRAINING_JOB_NAME"), "instance_type": os.environ.get("SM_CURRENT_INSTANCE_TYPE"),
+               "training_job_name": os.environ.get("TRAINING_JOB_NAME"), "instance_type": instance_type,
                "gpu": torch.cuda.get_device_name(0), "batch_size": args.batch_size, "max_new_tokens": max_new,
+               "adapter_merged": bool(args.merge_adapter), "warmup": args.warmup,
                "decoding": "greedy, enable_thinking=False", "total_wall_s": round(time.time() - t_all, 2),
                "finished_at": now()}
     summary.update(summarise(args.unit, records))

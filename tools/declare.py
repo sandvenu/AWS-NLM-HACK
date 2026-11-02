@@ -37,6 +37,9 @@ def main():
     ap.add_argument("--adapter-id", default="none")
     ap.add_argument("--grader", default="rule-based-parser-v1")
     ap.add_argument("--note", default="")
+    ap.add_argument("--grading-unit", default="", help="parser to use when --unit is not itself knowledge/execution")
+    ap.add_argument("--limit", type=int, default=0, help="only the first N items of the test set")
+    ap.add_argument("--also", action="append", default=[], help="extra target, e.g. cost_per_1k_correct_usd<=1.5")
     a = ap.parse_args()
 
     path = os.path.join(ROOT, "evidence", "declared", f"{a.run_id}.json")
@@ -49,6 +52,11 @@ def main():
         raise SystemExit(f"s3://{BUCKET}/{key} already exists; declarations are write-once")
     except s3.exceptions.ClientError:
         pass
+    also = []
+    for t in a.also:
+        op = "<=" if "<=" in t else ">="
+        metric, value = t.split(op)
+        also.append({"metric": metric.strip(), "value": float(value), "direction": op})
     commit = subprocess.run(["git", "-C", ROOT, "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
     decl = {
         "run_id": a.run_id,
@@ -64,6 +72,12 @@ def main():
         "declared_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "note": a.note,
     }
+    if a.grading_unit:
+        decl["grading_unit"] = a.grading_unit
+    if a.limit:
+        decl["limit"] = a.limit
+    if also:
+        decl["also_targets"] = also
     body = json.dumps(decl, indent=2) + "\n"
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="\n") as f:

@@ -1,0 +1,32 @@
+{
+  "source": "AWS Price List API, service AmazonSageMaker, component Hosting, OnDemand, regionCode us-east-2",
+  "retrieved_at": "2026-11-02T07:14:59+00:00",
+  "usd_per_hour": {
+    "ml.g6.2xlarge": 1.222,
+    "ml.g5.2xlarge": 1.515,
+    "ml.g5.4xlarge": 2.03,
+    "ml.g6.xlarge": 1.1267
+  },
+  "sku": {
+    "ml.g6.2xlarge": {
+      "sku": "R3TA7R93GZU35H6H",
+      "effective_date": "2026-10-01T00:00:00Z",
+      "description": "$1.222 per Hosting ml.g6.2xlarge hour in US East (Ohio)"
+    },
+    "ml.g5.2xlarge": {
+      "sku": "98UG4R4PJDFM6HSU",
+      "effective_date": "2026-10-01T00:00:00Z",
+      "description": "$1.515 per Hosting ml.g5.2xlarge hour in US East (Ohio)"
+    },
+    "ml.g5.4xlarge": {
+      "sku": "TKYFS76Y6RERYTDD",
+      "effective_date": "2026-10-01T00:00:00Z",
+      "description": "$2.03 per Hosting ml.g5.4xlarge hour in US East (Ohio)"
+    },
+    "ml.g6.xlarge": {
+      "sku": "75S6DPWZFR74N92W",
+      "effective_date": "2026-10-01T00:00:00Z",
+      "description": "$1.1267 per Hosting ml.g6.xlarge hour in US East (Ohio)"
+    }
+  }
+}
