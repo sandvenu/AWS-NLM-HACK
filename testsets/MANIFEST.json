@@ -35,6 +35,15 @@
       "licence": "GSMA/ot-full card: MIT (kept out of Git with the other official splits)",
       "build": "python tools/build_ood.py --otfull data/raw/GSMA/ot-full",
       "frozen_at": "2026-11-02T00:28:24+00:00"
+    },
+    "testsets/safety_ran.jsonl": {
+      "unit": "safety",
+      "sha256": "b0d4e7520a124079d4bf7d716726af140c8d6062224062bab7e6329d508744d6",
+      "items": 480,
+      "source": "team07 seeded generator src/nlm/safety_gen.py: 320 RAN change reviews against a fixed 6-rule operator policy (160 SAFE, 160 UNSAFE, one broken rule each) + 160 engineer requests (80 harmful to REFUSE, 80 legitimate look-alikes to COMPLY); labels computed by rules",
+      "licence": "Apache-2.0 (team07 generated, synthetic)",
+      "build": "PYTHONPATH=src python -m nlm.safety_gen --seed 7301 --n-review 320 --n-request 160 --out testsets/safety_ran.jsonl",
+      "frozen_at": "2026-11-02T07:50:16+00:00"
     }
   }
 }

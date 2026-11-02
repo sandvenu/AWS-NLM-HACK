@@ -30,7 +30,7 @@ def now():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--run_id", required=True)
-    ap.add_argument("--unit", required=True, choices=["knowledge", "execution"])
+    ap.add_argument("--unit", required=True, choices=["knowledge", "execution", "safety"])
     ap.add_argument("--test_file", required=True)
     ap.add_argument("--model_id", required=True)
     ap.add_argument("--adapter_id", default="none")
@@ -52,7 +52,7 @@ def main():
     items = read_jsonl(test_path)
     if args.limit:
         items = items[: args.limit]
-    max_new = args.max_new_tokens or (24 if args.unit == "knowledge" else 640)
+    max_new = args.max_new_tokens or {"knowledge": 24, "safety": 64}.get(args.unit, 640)
     log(f"START unit={args.unit} n={len(items)} test_sha256={test_sha} model_id={args.model_id} "
         f"adapter_id={args.adapter_id} grader={args.grader} job={os.environ.get('TRAINING_JOB_NAME', '?')}")
 
@@ -119,6 +119,8 @@ def main():
                    "batch_finished_at": finished, "batch_wall_s": round(wall, 4),
                    "latency_s": round(wall / len(batch_items), 4), "batch_size": args.batch_size,
                    "instance_type": instance_type, "adapter_merged": bool(args.merge_adapter)}
+            if "task" in it:
+                rec["task"] = it["task"]
             rec.update(grade(args.unit, it, text, args.grader))
             records.append(rec)
             log(f"RECORD item={it['id']} parsed={rec['parsed']} gold={rec['gold']} correct={rec['correct']} "
