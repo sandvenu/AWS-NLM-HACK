@@ -22,6 +22,10 @@
     "execution_ood_telemath_team07_protocol": {
       "base": "2026-11-02T00-29-telemath-team07-base-01",
       "tuned": "2026-11-02T00-29-telemath-team07-tuned-01"
+    },
+    "price_latency": {
+      "base": "2026-11-02T07-16-pricelat-base-01",
+      "tuned": "2026-11-02T07-16-pricelat-tuned-01"
     }
   },
   "s3_only_records": [

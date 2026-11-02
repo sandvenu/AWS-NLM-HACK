@@ -46,9 +46,9 @@ from training). A gain here shows the model learned these calculation procedures
 not show transfer to the official TeleMath benchmark (G-12 measures that transfer, and it is small). The organisers' Leeds adapters (trained on their own,
 independent synthetic generator) are scored on our set as an out-of-generator comparison.
 
-**G-06: Not attempted: Safety & trustworthiness, Price & latency (as declared units), RL against the hosted twin, MAVERIC config tasks.**
-Following the "two finished units" rule. Per-item latency is recorded in every record, but no Price/Latency
-target was declared, so it is reported as information only.
+**G-06: Not attempted: Safety & trustworthiness, RL against the hosted twin, MAVERIC config tasks.**
+Following the "two finished units" rule. Price & latency was added later as a third unit (G-16). RL against the
+hosted twin waits on the organisers' team .env (twin URL and adapter token); we may not host our own twin for the event.
 
 **G-07: The first Knowledge target was set too low. Limits: Knowledge (target quality).**
 Before seeing any result we declared the knowledge unit target as exact match >= 0.60. The untuned base scored
@@ -108,6 +108,20 @@ delta: TeleQnA training transfers a little to O-RAN questions.
 **G-14: One job waited 22 minutes for a GPU.** `2026-11-02T00-29-telemath-gsma-tuned-01` on ml.g5.2xlarge was
 created 00:29 UTC and started downloading at 00:51 UTC. Under the 30-minute rule, so not relaunched. No other job
 waited more than about a minute.
+
+**G-16: Price/Latency unit: what it does and does not measure. Limits: Price/Latency.**
+Runs `2026-11-02T07-16-pricelat-base-01` (FAIL) -> `2026-11-02T07-16-pricelat-tuned-01` (PASS), both declared before launch with the same two targets
+(p95 latency <= 5.0 s and <= $1.50 per 1,000 correct answers).
+- Items: the first 120 of the frozen Execution set (5 per family, all 24 families), not all 480, to keep one-at-a-time
+  runs short. Knowledge items were not timed (answers are 1 to 20 tokens, so latency says little there).
+- Serving stack: Hugging Face `generate`, batch size 1, on a SageMaker training job (ml.g6.2xlarge, one NVIDIA L4).
+  Not a real endpoint: no network, queueing or concurrency. A serving engine such as vLLM would be faster for both models.
+- Cost is the on-demand Hosting price x busy time only. It ignores idle time, so it is a lower bound for a
+  dedicated endpoint; the base/tuned ratio is the useful number.
+- The tuned model runs with the LoRA merged into the weights (`merge_adapter=1`). Unmerged PEFT, as in the
+  Execution unit runs, decodes more slowly. Accuracy on these 120 items (0.683) equals the unmerged tuned Execution run on
+  the same items, and 116 of 120 verdicts are identical, so merging barely changes answers.
+- Tuned and base decode at the same speed (about 37 tokens/s); the gain comes from shorter answers and higher accuracy.
 
 ## Run failures
 

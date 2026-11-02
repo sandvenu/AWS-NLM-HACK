@@ -19,7 +19,17 @@
 | execution_ood_telemath_team07_protocol | base | `2026-11-02T00-29-telemath-team07-base-01` | otel-llm-1.7b-it@2a2d417b / none | 500 | 0.0400 | accuracy_rel2pct >= 0.1 | FAIL | True | 1.9965 |
 | execution_ood_telemath_team07_protocol | tuned | `2026-11-02T00-29-telemath-team07-tuned-01` | otel-llm-1.7b-it@2a2d417b / team07-lora-v1 | 500 | 0.0700 | accuracy_rel2pct >= 0.1 | FAIL | True | 3.7447 |
 | execution_ood_telemath_team07_protocol | **tuned - base** | | | | **+0.0300** | | | | |
+| price_latency | base | `2026-11-02T07-16-pricelat-base-01` | otel-llm-1.7b-it@2a2d417b / none | 120 | 0.1250 | latency_p95_s <= 5.0; cost_per_1k_correct_usd <= 1.5 | FAIL | True | 2.1475 |
+| price_latency | tuned | `2026-11-02T07-16-pricelat-tuned-01` | otel-llm-1.7b-it@2a2d417b / team07-lora-v1-merged | 120 | 0.6833 | latency_p95_s <= 5.0; cost_per_1k_correct_usd <= 1.5 | PASS | True | 1.6794 |
+| price_latency | **tuned - base** | | | | **+0.5583** | | | | |
 
 Execution, information only (not declared): accuracy within 0.5% relative error: base 0.1229, tuned 0.5333, leeds_v2 0.1062, leeds_v3 0.1167.
+
+Price/Latency detail (batch 1, greedy, same items, prompt and parser; cost = on-demand Hosting price x wall time, evidence/pricing.json):
+
+| role | instance | adapter merged | p50 s | p95 s | mean s | tokens/s | accuracy | USD per 1k requests | USD per 1k correct |
+|---|---|---|---|---|---|---|---|---|---|
+| base | ml.g6.2xlarge ($1.222/h) | False | 2.1475 | 6.7153 | 2.8552 | 36.94 | 0.1250 | 0.9692 | 7.7534 |
+| tuned | ml.g6.2xlarge ($1.222/h) | True | 1.6794 | 3.6511 | 1.953 | 36.73 | 0.6833 | 0.663 | 0.9702 |
 
 Rebuild: `python tools/rebuild.py` (no AWS access; exits 1 if any evidence changed).

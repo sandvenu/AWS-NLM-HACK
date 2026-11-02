@@ -51,6 +51,20 @@ Environment: `AWS_PROFILE=fyuz`, region us-east-2, Python ≥ 3.11 with `boto3` 
 |---|---|---|---|---|---|---|
 | Knowledge (TeleQnA, 500) | exact match | 0.646 | **0.738** | +9.2 pp | >= 0.68 | PASS |
 | Execution (synthetic telecom math, 480) | within 2% rel. error | 0.150 | **0.679** | +52.9 pp | >= 0.60 | PASS |
+| Price/Latency (first 120 Execution items, one request at a time, ml.g6.2xlarge) | p95 latency <= 5.0 s **and** <= $1.50 per 1,000 correct answers | 6.72 s, $7.75 (FAIL) | **3.65 s, $0.97** | -3.06 s, -$6.78 | both | PASS |
+
+Price/Latency detail (runs `2026-11-02T07-16-pricelat-base-01` -> `2026-11-02T07-16-pricelat-tuned-01`): greedy, batch size 1, 2 untimed warm-ups, tuned adapter merged
+into the base weights as it would be served. Cost = SageMaker on-demand Hosting price from the AWS Price List API
+(`evidence/pricing.json`, $1.222/h for ml.g6.2xlarge in us-east-2) x per-request wall time.
+
+| | p50 s | p95 s | mean s | tokens/s | accuracy (2%) | USD per 1k requests | USD per 1k correct |
+|---|---|---|---|---|---|---|---|
+| base | 2.15 | 6.72 | 2.86 | 36.9 | 0.125 | 0.97 | 7.75 |
+| tuned | 1.68 | 3.65 | 1.95 | 36.7 | 0.683 | 0.66 | 0.97 |
+
+Decoding speed is the same (about 37 tokens/s): merging the LoRA adds no serving cost. The tuned model is faster and
+cheaper because it writes shorter answers (it learned the `Final answer:` format), and it is right far more often,
+so a correct answer costs 8x less. Limits in GAPS G-16.
 
 **Out-of-distribution checks** (official `GSMA/ot-full` test splits, never trained on, hashes frozen, files kept out of Git):
 

@@ -141,5 +141,27 @@
     "training_end_time": "2026-11-02T06:30:52.305000+05:30",
     "billable_seconds": 1693,
     "tags_run_id": "2026-11-02T00-29-telemath-team07-tuned-01"
+  },
+  "2026-11-02T07-16-pricelat-base-01": {
+    "training_job_name": "2026-11-02T07-16-pricelat-base-01",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T07-16-pricelat-base-01",
+    "status": "Completed",
+    "instance_type": "ml.g6.2xlarge",
+    "creation_time": "2026-11-02T12:47:32.139000+05:30",
+    "training_start_time": "2026-11-02T12:48:23.215000+05:30",
+    "training_end_time": "2026-11-02T12:57:58.253000+05:30",
+    "billable_seconds": 575,
+    "tags_run_id": "2026-11-02T07-16-pricelat-base-01"
+  },
+  "2026-11-02T07-16-pricelat-tuned-01": {
+    "training_job_name": "2026-11-02T07-16-pricelat-tuned-01",
+    "training_job_arn": "arn:aws:sagemaker:us-east-2:041915167631:training-job/2026-11-02T07-16-pricelat-tuned-01",
+    "status": "Completed",
+    "instance_type": "ml.g6.2xlarge",
+    "creation_time": "2026-11-02T12:58:24.122000+05:30",
+    "training_start_time": "2026-11-02T13:02:40.726000+05:30",
+    "training_end_time": "2026-11-02T13:10:30.652000+05:30",
+    "billable_seconds": 470,
+    "tags_run_id": "2026-11-02T07-16-pricelat-tuned-01"
   }
 }

@@ -18,6 +18,8 @@
     "2026-11-01T23-31-execution-base-01",
     "2026-11-02T00-05-execution-tuned-01",
     "2026-11-01T23-39-train-lora-01",
+    "2026-11-02T07-16-pricelat-base-01",
+    "2026-11-02T07-16-pricelat-tuned-01",
     "2026-11-02T00-55-oranbench-base-01",
     "2026-11-02T00-55-oranbench-tuned-01",
     "2026-11-02T00-29-telemath-gsma-base-01",
@@ -84,7 +86,26 @@
       }
     },
     "safety_and_trustworthiness": "not attempted (GAPS.md G-06)",
-    "price_and_latency": "not declared; per-item latency recorded in every record (GAPS.md G-06)",
+    "price_and_latency": {
+      "metric": "latency_p95_s <= 5.0 and cost_per_1k_correct_usd <= 1.5 (both must pass)",
+      "items": "first 120 of testsets/execution_telemath_synth.jsonl, batch size 1, ml.g6.2xlarge",
+      "price_source": "evidence/pricing.json (AWS Price List API, SageMaker Hosting on-demand, us-east-2)",
+      "base": {
+        "latency_p95_s": 6.7153,
+        "cost_per_1k_correct_usd": 7.7534,
+        "accuracy_rel2pct": 0.125,
+        "check": "FAIL"
+      },
+      "tuned": {
+        "latency_p95_s": 3.6511,
+        "cost_per_1k_correct_usd": 0.9702,
+        "accuracy_rel2pct": 0.6833,
+        "check": "PASS"
+      },
+      "base_run_id": "2026-11-02T07-16-pricelat-base-01",
+      "tuned_run_id": "2026-11-02T07-16-pricelat-tuned-01",
+      "gaps": "GAPS.md G-16"
+    },
     "out_of_distribution": {
       "oranbench_exact_match": {
         "base": 0.672,

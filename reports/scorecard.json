@@ -328,6 +328,89 @@
         "info_accuracy_rel0_5pct": 0.06
       },
       "delta_accuracy": 0.03
+    },
+    "price_latency": {
+      "base": {
+        "run_id": "2026-11-02T07-16-pricelat-base-01",
+        "unit": "price-latency",
+        "model_id": "otel-llm-1.7b-it@2a2d417b",
+        "adapter_id": "none",
+        "target": {
+          "metric": "latency_p95_s",
+          "value": 5.0,
+          "direction": "<="
+        },
+        "also_targets": [
+          {
+            "metric": "cost_per_1k_correct_usd",
+            "value": 1.5,
+            "direction": "<="
+          }
+        ],
+        "declared_at": "2026-11-02T07:17:03+00:00",
+        "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
+        "metric_value": 6.7153,
+        "check": "FAIL",
+        "times_agree_with_aws": true,
+        "grader": "rule-based-parser-v1",
+        "test_set": "testsets/execution_telemath_synth.jsonl",
+        "test_set_check": "hash verified, first 120 items",
+        "n": 120,
+        "accuracy": 0.125,
+        "unparsed": 62,
+        "accuracy_loose_5pct": 0.13333333333333333,
+        "latency_p50_s": 2.1475,
+        "latency_p95_s": 6.7153,
+        "info_accuracy_rel0_5pct": 0.1083,
+        "instance_type": "ml.g6.2xlarge",
+        "adapter_merged": false,
+        "usd_per_hour": 1.222,
+        "latency_mean_s": 2.8552,
+        "tokens_per_s": 36.94,
+        "cost_per_1k_requests_usd": 0.9692,
+        "cost_per_1k_correct_usd": 7.7534
+      },
+      "tuned": {
+        "run_id": "2026-11-02T07-16-pricelat-tuned-01",
+        "unit": "price-latency",
+        "model_id": "otel-llm-1.7b-it@2a2d417b",
+        "adapter_id": "team07-lora-v1-merged",
+        "target": {
+          "metric": "latency_p95_s",
+          "value": 5.0,
+          "direction": "<="
+        },
+        "also_targets": [
+          {
+            "metric": "cost_per_1k_correct_usd",
+            "value": 1.5,
+            "direction": "<="
+          }
+        ],
+        "declared_at": "2026-11-02T07:17:09+00:00",
+        "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
+        "metric_value": 3.6511,
+        "check": "PASS",
+        "times_agree_with_aws": true,
+        "grader": "rule-based-parser-v1",
+        "test_set": "testsets/execution_telemath_synth.jsonl",
+        "test_set_check": "hash verified, first 120 items",
+        "n": 120,
+        "accuracy": 0.6833333333333333,
+        "unparsed": 1,
+        "accuracy_loose_5pct": 0.8083333333333333,
+        "latency_p50_s": 1.6794,
+        "latency_p95_s": 3.6511,
+        "info_accuracy_rel0_5pct": 0.5333,
+        "instance_type": "ml.g6.2xlarge",
+        "adapter_merged": true,
+        "usd_per_hour": 1.222,
+        "latency_mean_s": 1.953,
+        "tokens_per_s": 36.73,
+        "cost_per_1k_requests_usd": 0.663,
+        "cost_per_1k_correct_usd": 0.9702
+      },
+      "delta_accuracy": 0.5583
     }
   }
 }
