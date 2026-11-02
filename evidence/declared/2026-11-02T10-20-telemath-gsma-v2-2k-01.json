@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T10-20-telemath-gsma-v2-2k-01",
+  "team_code": "team07",
+  "unit": "execution-ood",
+  "target": {
+    "metric": "accuracy_gsma_rule",
+    "value": 0.11,
+    "direction": ">="
+  },
+  "test_set": "data/testsets/execution_telemath_official.jsonl",
+  "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v2",
+  "grader": "gsma-evals-telemath@708f1c5",
+  "git_commit": "7ddb03c0ed3b4c7cb7ceb3662425eeae30aa5a3d",
+  "declared_at": "2026-11-02T09:57:52+00:00",
+  "note": "Decoding change on adapter team07-lora-v2 (training run 2026-11-02T08-40-train-lora-02): GSMA prompt and scorer unchanged, greedy, max_new_tokens raised 1024 -> 2048 (16 of 500 v2 outputs hit 1024 in run 2026-11-02T09-00-telemath-gsma-v2-01, 0.106). Prediction >= 0.11."
+}

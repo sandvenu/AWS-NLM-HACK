@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T10-20-telemath-gsma-v2-vote5-01",
+  "team_code": "team07",
+  "unit": "execution-ood",
+  "target": {
+    "metric": "accuracy_gsma_rule",
+    "value": 0.13,
+    "direction": ">="
+  },
+  "test_set": "data/testsets/execution_telemath_official.jsonl",
+  "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v2",
+  "grader": "gsma-evals-telemath@708f1c5",
+  "git_commit": "7ddb03c0ed3b4c7cb7ceb3662425eeae30aa5a3d",
+  "declared_at": "2026-11-02T09:58:00+00:00",
+  "note": "Inference-time self-consistency on adapter team07-lora-v2: 5 samples per question (temperature 0.7, top_p 0.95, seed 1234, max 2048 new tokens), keep the answer most samples agree on (nlm.common.majority_vote; no gold used; all samples recorded and re-voted by tools/rebuild.py). GSMA prompt and scorer unchanged. About 5x the generation cost of greedy. Prediction >= 0.13."
+}
