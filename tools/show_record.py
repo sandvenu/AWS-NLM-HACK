@@ -30,15 +30,17 @@ def main():
     print("RECORD", json.dumps(rec, indent=2, ensure_ascii=False))
 
     logs = boto3.client("logs", region_name=REGION)
-    stream_prefix = None
     summary = json.loads(s3.get_object(Bucket=BUCKET, Key=f"evidence/records/{a.run_id}/summary.json")["Body"].read())
-    stream_prefix = summary.get("training_job_name")
-    resp = logs.filter_log_events(logGroupName=LOG_GROUP, logStreamNamePrefix=stream_prefix,
-                                  filterPattern=f'"run_id={a.run_id}" "item={a.item} "')
-    for ev in resp.get("events", []):
-        ts = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(ev["timestamp"] / 1000))
-        print(f"CLOUDWATCH {ev['logStreamName']} {ts} {ev['message'].strip()}")
-    if not resp.get("events"):
+    pages = logs.get_paginator("filter_log_events").paginate(
+        logGroupName=LOG_GROUP, logStreamNamePrefix=summary["training_job_name"],
+        filterPattern=f'"run_id={a.run_id}" "RECORD" "item={a.item}"')
+    found = 0
+    for page in pages:
+        for ev in page.get("events", []):
+            ts = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(ev["timestamp"] / 1000))
+            print(f"CLOUDWATCH {ev['logStreamName']} {ts} {ev['message'].strip()}")
+            found += 1
+    if not found:
         print("CLOUDWATCH no matching log line found")
 
 

@@ -61,6 +61,33 @@ Leeds adapters: 0 and 2). The grader is strict by design (the same parser for ev
 tuned-vs-base gain on Execution is format compliance, not arithmetic. Records show `parsed: null` for these
 items, and `accuracy` and `unparsed` are reported side by side.
 
+**G-09: The tuned model got worse on two Execution families and stays at 0 on one. Limits: Execution.**
+Per-family accuracy (20 items each), base -> tuned, runs `2026-11-01T23-31-execution-base-01` ->
+`2026-11-02T00-05-execution-tuned-01`: `shannon_capacity` 0.30 -> 0.15 and `cell_radius` 0.70 -> 0.30 (both
+regressions: log2 / 10^x arithmetic done "in the head" from a worked-solution template); `peak_rate` 0.00 -> 0.00
+(long multi-factor product), `mm1_sojourn` 0.00 -> 0.10, `friis_cascade` 0.05 -> 0.10. A 1.7B model trained to
+write worked solutions still makes arithmetic slips on multi-step exponent/log calculations. Not fixed: next
+steps would be tool use (a calculator call) or more training items for these families.
+
+**G-10: The Execution tolerance accepts small arithmetic slips. Limits: Execution (strength of the claim).**
+The declared metric is 2% relative error. Example: run `2026-11-02T00-05-execution-tuned-01`, item `exe-0042`,
+the model computed 10850 Hz for a gold 11050 Hz (an arithmetic slip, 1.8% off) and is marked correct. As
+information only (not declared), at 0.5% tolerance: base 0.1229, tuned 0.5333, Leeds v2 0.1062, Leeds v3 0.1167.
+The gain holds at the stricter tolerance, but is smaller.
+
+**G-11: Knowledge gain is in-distribution. Limits: Knowledge.**
+The adapter was trained on 9,476 TeleQnA items disjoint from the 500 test items (exact-question duplicates
+removed), and TeleQnA items share sources and style. The +9.2 pp gain (all five categories improved: Standards
+specifications 0.510 -> 0.630, Research publications 0.707 -> 0.796, Lexicon 0.680 -> 0.720, Standards overview
+0.620 -> 0.680, Research overview 0.650 -> 0.750) shows better TeleQnA-style recall. It is not shown on an
+independent knowledge benchmark (GSMA ot-lite was not reachable, G-01/G-02b). Near-duplicate (paraphrase)
+overlap between pool and test was not measured.
+
 ## Run failures
 
-(none yet)
+- `2026-11-01T23-24-smoke-execution-01`: plumbing smoke test (16 items) before any reported run; its output
+  revealed that the parser read `Final answer: 21.4 + 1.1 + ... = -96.7` as 21.4. The grader was fixed to take the
+  value after the last `=` (commit d2a00e2) **before** any reported run. Not a reported result.
+- No reported run failed or was relaunched. GPU capacity was available on the first try on every instance type
+  (ml.g6.2xlarge, ml.g5.2xlarge, ml.g5.4xlarge, ml.g6.xlarge), nothing Pending more than ~1 minute.
+

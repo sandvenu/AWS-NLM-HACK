@@ -47,6 +47,17 @@ Environment: `AWS_PROFILE=fyuz`, region us-east-2, Python ≥ 3.11 with `boto3` 
 
 ## Results
 
+| Unit | Metric | Untuned base | Tuned (team07-lora-v1) | Delta | Declared target (tuned) | Check |
+|---|---|---|---|---|---|---|
+| Knowledge (TeleQnA, 500) | exact match | 0.646 | **0.738** | +9.2 pp | >= 0.68 | PASS |
+| Execution (synthetic telecom math, 480) | within 2% rel. error | 0.150 | **0.679** | +52.9 pp | >= 0.60 | PASS |
+
+The organisers' Leeds TeleMath LoRAs on the same Execution set: v2 0.129, v3 0.154. At a stricter 0.5% tolerance
+(information only) tuned 0.533 vs base 0.123. Run ids: knowledge `2026-11-01T23-35-knowledge-base-01` ->
+`2026-11-02T00-05-knowledge-tuned-01`; execution `2026-11-01T23-31-execution-base-01` ->
+`2026-11-02T00-05-execution-tuned-01`; training `2026-11-01T23-39-train-lora-01`. Read the caveats in GAPS.md
+(G-05, G-07 to G-11): Execution is in-distribution with our training generator, and part of its gain is answer-format compliance.
+
 See [`reports/scorecard.md`](reports/scorecard.md) (rebuilt from `evidence/` by `tools/rebuild.py`),
 [`GAPS.md`](GAPS.md) for what did not work and [`DATA.md`](DATA.md) for data lineage.
 

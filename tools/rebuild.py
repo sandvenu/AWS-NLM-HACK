@@ -10,14 +10,17 @@ Exits 1 if anything changed or disagrees. With --write it also writes reports/sc
   python tools/rebuild.py [--write]
 """
 import argparse
+import datetime as dt
 import json
 import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "src"))
-from nlm.common import grade, read_jsonl, sha256_file, sha256_text, summarise  # noqa: E402
+from nlm.common import grade, num_correct, read_jsonl, sha256_file, sha256_text, summarise  # noqa: E402
 
+_times_path = os.path.join(ROOT, "evidence", "aws_job_times.json")
+AWS_TIMES = json.load(open(_times_path, encoding="utf-8")) if os.path.exists(_times_path) else {}
 METRIC_KEY = {"exact_match": "accuracy", "accuracy_rel2pct": "accuracy", "accuracy_rel5pct": "accuracy_loose_5pct"}
 
 
@@ -57,11 +60,24 @@ def rebuild_run(run_id, manifest, errors):
         regraded.append({**r, **g})
     if len(records) != len(items):
         errors.append(f"{run_id}: {len(records)} records for {len(items)} test items")
+    times_ok = None
+    aws = AWS_TIMES.get(run_id)
+    if aws:
+        lo, hi = dt.datetime.fromisoformat(aws["training_start_time"]), dt.datetime.fromisoformat(aws["training_end_time"])
+        declared = dt.datetime.fromisoformat(decl["declared_at"])
+        times_ok = declared <= dt.datetime.fromisoformat(aws["creation_time"]) and all(
+            lo <= dt.datetime.fromisoformat(r["batch_started_at"]) <= dt.datetime.fromisoformat(r["batch_finished_at"]) <= hi
+            for r in records)
+        if not times_ok:
+            errors.append(f"{run_id}: record times or declaration time disagree with AWS job times")
     summary = summarise(decl["unit"], regraded)
+    if decl["unit"] == "execution":  # information only, not a declared metric
+        summary["info_accuracy_rel0_5pct"] = round(
+            sum(num_correct(r["parsed"], r["gold"], 0.005) for r in regraded) / len(regraded), 4)
     value, verdict = check_target(decl, summary)
     return {"run_id": run_id, "unit": decl["unit"], "model_id": decl["model_id"], "adapter_id": decl["adapter_id"],
             "target": decl["target"], "declared_at": decl["declared_at"], "test_set_sha256": decl["test_set_sha256"],
-            "metric_value": value, "check": verdict, **summary}
+            "metric_value": value, "check": verdict, "times_agree_with_aws": times_ok, **summary}
 
 
 def main():
@@ -86,8 +102,8 @@ def main():
             card["units"][unit]["delta_accuracy"] = round(tuned["accuracy"] - base["accuracy"], 4)
 
     lines = ["# team07 Track 1 scorecard (rebuilt from evidence/)", "",
-             "| unit | role | run id | model / adapter | n | accuracy | target | check | p50 latency (s/item) |",
-             "|---|---|---|---|---|---|---|---|---|"]
+             "| unit | role | run id | model / adapter | n | accuracy | target | check | times agree with AWS | p50 latency (s/item) |",
+             "|---|---|---|---|---|---|---|---|---|---|"]
     for unit, roles in card["units"].items():
         for role, r in roles.items():
             if not isinstance(r, dict):
@@ -95,9 +111,13 @@ def main():
             t = r["target"]
             lines.append(f"| {unit} | {role} | `{r['run_id']}` | {r['model_id']} / {r['adapter_id']} | {r['n']} | "
                          f"{r['accuracy']:.4f} | {t['metric']} {t.get('direction', '>=')} {t['value']} | {r['check']} | "
+                         f"{r['times_agree_with_aws']} | "
                          f"{r.get('latency_p50_s', '')} |")
         if "delta_accuracy" in roles:
-            lines.append(f"| {unit} | **tuned - base** | | | | **{roles['delta_accuracy']:+.4f}** | | | |")
+            lines.append(f"| {unit} | **tuned - base** | | | | **{roles['delta_accuracy']:+.4f}** | | | | |")
+    lines += ["", "Execution, information only (not declared): accuracy within 0.5% relative error: " + ", ".join(
+        f"{role} {r['info_accuracy_rel0_5pct']:.4f}" for role, r in card["units"].get("execution", {}).items()
+        if isinstance(r, dict) and "info_accuracy_rel0_5pct" in r) + "."]
     text = "\n".join(lines)
     print(text)
     if args.write:

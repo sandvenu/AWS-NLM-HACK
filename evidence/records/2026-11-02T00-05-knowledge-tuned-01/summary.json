@@ -1,0 +1,22 @@
+{
+  "run_id": "2026-11-02T00-05-knowledge-tuned-01",
+  "unit": "knowledge",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v1",
+  "grader": "rule-based-parser-v1",
+  "test_set_sha256": "7e15eb4a2dfd14a7bba1fc7c8f83ed80dd789d21fd1094094a0c883c912ebc24",
+  "test_file": "knowledge_teleqna.jsonl",
+  "training_job_name": "2026-11-02T00-05-knowledge-tuned-01",
+  "instance_type": "ml.g6.2xlarge",
+  "gpu": "NVIDIA L4",
+  "batch_size": 32,
+  "max_new_tokens": 24,
+  "decoding": "greedy, enable_thinking=False",
+  "total_wall_s": 20.92,
+  "finished_at": "2026-11-02T00:10:42.293+00:00",
+  "n": 500,
+  "accuracy": 0.738,
+  "unparsed": 0,
+  "latency_p50_s": 0.0416,
+  "latency_p95_s": 0.0518
+}

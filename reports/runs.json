@@ -1,10 +1,13 @@
 {
+  "training_run": "2026-11-01T23-39-train-lora-01",
   "units": {
     "knowledge": {
-      "base": "2026-11-01T23-35-knowledge-base-01"
+      "base": "2026-11-01T23-35-knowledge-base-01",
+      "tuned": "2026-11-02T00-05-knowledge-tuned-01"
     },
     "execution": {
       "base": "2026-11-01T23-31-execution-base-01",
+      "tuned": "2026-11-02T00-05-execution-tuned-01",
       "leeds_v2": "2026-11-01T23-31-execution-leedsv2-01",
       "leeds_v3": "2026-11-01T23-31-execution-leedsv3-01"
     }

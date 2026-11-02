@@ -1,0 +1,59 @@
+{
+  "primary_track": "track-1",
+  "_todo": "team07: confirm the primary track. If Track 3 is primary, keep this as the Track 1 secondary entry (copied to s3://<bucket>/judging/track-1/judging.json) and do not copy it over judging/judging.json.",
+  "team_code": "team07",
+  "repository_path": "nlm-track1/",
+  "evidence": {
+    "bucket": "bb26-p-team07-data-041915167631-use2",
+    "prefix": "evidence/",
+    "declared": "evidence/declared/<run_id>.json",
+    "records": "evidence/records/<run_id>/records.jsonl",
+    "summaries": "evidence/records/<run_id>/summary.json",
+    "cloudwatch_log_group": "/aws/sagemaker/TrainingJobs (log stream prefix = run id; one 'RECORD run_id=<id> item=<item>' line per item)",
+    "region": "us-east-2"
+  },
+  "run_ids": [
+    "2026-11-01T23-35-knowledge-base-01",
+    "2026-11-02T00-05-knowledge-tuned-01",
+    "2026-11-01T23-31-execution-base-01",
+    "2026-11-02T00-05-execution-tuned-01",
+    "2026-11-01T23-39-train-lora-01",
+    "2026-11-01T23-31-execution-leedsv2-01",
+    "2026-11-01T23-31-execution-leedsv3-01",
+    "2026-11-01T23-24-smoke-execution-01"
+  ],
+  "live_test_command": "python3 tools/show_record.py --run-id {run_id} --item {item}",
+  "live_test_services": ["s3:GetObject", "logs:FilterLogEvents"],
+  "rebuild_command": "python3 tools/rebuild.py",
+  "test_sets": {
+    "knowledge": {"file": "testsets/knowledge_teleqna.jsonl", "sha256": "7e15eb4a2dfd14a7bba1fc7c8f83ed80dd789d21fd1094094a0c883c912ebc24", "items": 500},
+    "execution": {"file": "testsets/execution_telemath_synth.jsonl", "sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63", "items": 480}
+  },
+  "grader": "rule-based-parser-v1 (src/nlm/common.py); no LLM grader",
+  "reported_results": {
+    "knowledge": {
+      "metric": "exact_match",
+      "base": 0.646,
+      "tuned": 0.738,
+      "delta": 0.092,
+      "target": ">= 0.68 (tuned run)",
+      "check": "PASS",
+      "base_run_id": "2026-11-01T23-35-knowledge-base-01",
+      "tuned_run_id": "2026-11-02T00-05-knowledge-tuned-01"
+    },
+    "execution": {
+      "metric": "accuracy_rel2pct",
+      "base": 0.15,
+      "tuned": 0.6792,
+      "delta": 0.5292,
+      "tuned_accuracy_rel5pct": 0.7729,
+      "target": ">= 0.60",
+      "check": "PASS",
+      "base_run_id": "2026-11-01T23-31-execution-base-01",
+      "tuned_run_id": "2026-11-02T00-05-execution-tuned-01",
+      "comparison_points": {"leeds_telemath_v2": 0.1292, "leeds_telemath_v3": 0.1542}
+    },
+    "safety_and_trustworthiness": "not attempted (GAPS.md G-06)",
+    "price_and_latency": "not declared; per-item latency recorded in every record (GAPS.md G-06)"
+  }
+}

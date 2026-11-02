@@ -11,7 +11,7 @@ are in [`testsets/MANIFEST.json`](testsets/MANIFEST.json); every run's declarati
 | OTel-LLM-1.7B-IT (base, untuned) | `s3://fyuz-otel-leeds-2026/base-model/otel-llm-1.7b-it/` (organisers, us-east-1), copied server-side to `s3://bb26-p-team07-data-041915167631-use2/nlm-track1/models/otel-llm-1.7b-it/` | Apache-2.0 (model card in the same prefix, `README.md`) | HF `farbodtavakkoli/OTel-LLM-1.7B-IT`, revision `2a2d417b4c84d7ea609d6026a864cdf666ab1491` (`base-model/otel_model_revision.txt`). Qwen3-1.7B architecture (`Qwen3ForCausalLM`), full-parameter post-trained by OTel on the OTel-LLM dataset (context-grounded RAG QA). In the evidence it appears as `otel-llm-1.7b-it@2a2d417b`. |
 | Leeds TeleMath reasoning LoRA v2 / v3 (comparison points) | `s3://fyuz-otel-leeds-2026/leeds/telemath-leeds/{v2,v3}/adapter/` (the guide gives `leeds/otel-telemath-reasoning/...`; the real prefix is `leeds/telemath-leeds/`) | not stated in the bucket README ("keep S3 access private") | PEFT LoRA adapters on the same base. The organisers' `metrics.json` reports official TeleMath-500 @5%: v2 5.80%, v3 4.20%. |
 | Leeds TeleLogs LoRA v3 | `s3://fyuz-otel-leeds-2026/leeds/otel-telelogs-lora-v3/adapter/` | — | Not used: it is an 8-way classification head trained on TeleLogs; we do not use TeleLogs (see below). |
-| team07 LoRA adapter (tuned model) | produced by our SageMaker training job; S3 path recorded in the training run's `train_summary.json` | Apache-2.0 (derivative of the base) | adapter id `team07-lora-v1` |
+| team07 LoRA adapter (tuned model) | SageMaker training job `2026-11-01T23-39-train-lora-01` (ml.g5.2xlarge, 1,192 s, final train loss 0.1625): `s3://bb26-p-team07-data-041915167631-use2/nlm-track1/jobs/2026-11-01T23-39-train-lora-01/output/model.tar.gz` | Apache-2.0 (derivative of the base) | adapter id `team07-lora-v1`; LoRA r=32, alpha=64, dropout 0.05, all-linear, 1 epoch, lr 2e-4 cosine, completion-only loss (OTel `training/llm/peft` recipe) |
 
 The model card `att/OTel-LLM-1.7B-IT` named in the brief could not be opened: huggingface.co
 is blocked from the team07 network (see GAPS.md). The organisers' copy of the card
@@ -27,6 +27,16 @@ is blocked from the team07 network (see GAPS.md). The organisers' copy of the ca
 | GSMA Open Telco `GSMA/ot-lite`, `GSMA/ot-full` | not used | huggingface.co (blocked from our network) | not verified | not verified (GAPS.md G-01) |
 | netop TeleMath (official 500) | not used | huggingface.co, gated | not verified | — (GAPS.md G-01) |
 | netop TeleLogs | not used | huggingface.co; asks not to be redistributed | — | Never downloaded or committed by team07. The organisers hold a copy at `s3://fyuz-otel-leeds-2026/leeds/telelogs-*`; we did not use it. |
+
+## Training data
+
+`data/train/train.jsonl` (not committed; copy at
+`s3://bb26-p-team07-data-041915167631-use2/nlm-track1/train/2026-11-01T23-39-train-lora-01/train.jsonl`),
+sha256 `13fed274c30dcd0347d5377bfa1c004419b2483fcec4cd99b22a0f0610bef9c7`, 15,476 rows: 6,000 synthetic
+execution items with worked solutions (seed 8202, all 480 test questions banned) + 9,476 TeleQnA items (all
+10,000 minus the 500 test items and 24 exact duplicates of test questions). Every row uses the same system
+prompt and user template as evaluation. Built by `tools/build_train.py`; manifest in
+`evidence/train_manifest.json`. No model wrote any training label.
 
 ## Model outputs
 
