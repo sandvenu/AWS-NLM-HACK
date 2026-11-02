@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T11-30-tsg-v3-01",
+  "team_code": "team07",
+  "unit": "classify-ood",
+  "target": {
+    "metric": "accuracy",
+    "value": 0.2,
+    "direction": ">="
+  },
+  "test_set": "data/testsets/classify_3gpp_tsg.jsonl",
+  "test_set_sha256": "a579e5de924ef924c9c017b1ceffd4bbdfe93c74be180a59584208e18f622f6b",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v3",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "f09366bc28d0fa21600cb52f2319d679abfc6b8a",
+  "declared_at": "2026-11-02T11:21:45+00:00",
+  "note": "Adapter team07-lora-v3 from run 2026-11-02T10-20-train-lora-03. Same target as v2 (base 0.1975, v2 0.243). Nothing about working groups was trained."
+}

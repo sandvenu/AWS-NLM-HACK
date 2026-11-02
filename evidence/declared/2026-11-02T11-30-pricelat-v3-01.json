@@ -1,0 +1,27 @@
+{
+  "run_id": "2026-11-02T11-30-pricelat-v3-01",
+  "team_code": "team07",
+  "unit": "price-latency",
+  "target": {
+    "metric": "latency_p95_s",
+    "value": 5.0,
+    "direction": "<="
+  },
+  "test_set": "testsets/execution_telemath_synth.jsonl",
+  "test_set_sha256": "e0152332fba3d220e0e23af6068f127ef4c8cf12333d93efa9a3263c40007a63",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v3-merged",
+  "grader": "rule-based-parser-v1",
+  "git_commit": "f09366bc28d0fa21600cb52f2319d679abfc6b8a",
+  "declared_at": "2026-11-02T11:21:51+00:00",
+  "note": "Adapter team07-lora-v3 from run 2026-11-02T10-20-train-lora-03. Same protocol and targets as 2026-11-02T09-00-pricelat-v2-01: first 120 Execution items, batch 1, 2 warm-ups, adapter merged, ml.g6.2xlarge, 1.222 USD/h.",
+  "grading_unit": "execution",
+  "limit": 120,
+  "also_targets": [
+    {
+      "metric": "cost_per_1k_correct_usd",
+      "value": 1.5,
+      "direction": "<="
+    }
+  ]
+}

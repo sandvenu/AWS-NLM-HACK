@@ -1,0 +1,18 @@
+{
+  "run_id": "2026-11-02T11-30-telemath-gsma-v2-vote5-02",
+  "team_code": "team07",
+  "unit": "execution-ood",
+  "target": {
+    "metric": "accuracy_gsma_rule",
+    "value": 0.13,
+    "direction": ">="
+  },
+  "test_set": "data/testsets/execution_telemath_official.jsonl",
+  "test_set_sha256": "9fc35ad47e84a792402ac6b4268a3880c73d93f8dd652ceda270eadf54520416",
+  "model_id": "otel-llm-1.7b-it@2a2d417b",
+  "adapter_id": "team07-lora-v2",
+  "grader": "gsma-evals-telemath@708f1c5",
+  "git_commit": "f09366bc28d0fa21600cb52f2319d679abfc6b8a",
+  "declared_at": "2026-11-02T11:21:57+00:00",
+  "note": "Re-run of 2026-11-02T10-20-telemath-gsma-v2-vote5-01, which failed with CUDA out of memory (batch 8 x 5 samples x 2,048 tokens on ml.g5.2xlarge) and produced no records. Same method (5 samples, temperature 0.7, top_p 0.95, seed 1234, majority vote, all samples recorded) but batch 6 and max 1,024 new tokens: the greedy 2,048-token run 2026-11-02T10-20-telemath-gsma-v2-2k-01 scored 0.106, the same as 1,024, so the longer limit buys nothing. Prediction unchanged: >= 0.13."
+}
