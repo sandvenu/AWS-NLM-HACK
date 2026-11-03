@@ -214,3 +214,12 @@ not be redistributed. The four runs' `records.jsonl` stay in the team bucket at
 command); their declarations and `summary.json` are in Git. Offline `tools/rebuild.py` therefore reports these four
 runs from `summary.json` without re-grading them. The ORAN-Bench and team07 test-set records are in Git and are
 re-graded offline.
+
+**G-20: Commit ids in declarations differ from the published history.** Each declaration records the commit of the
+team07 working repository at declaration time. Before publishing, the history was rewritten once to remove the four
+official TeleMath `records.jsonl` files (G-15), which changes every later commit id. So 11 of the 18 distinct
+`git_commit` values in `evidence/declared/` are not found directly on github.com/sandvenu/AWS-NLM-HACK.
+`evidence/commit_map.json` pairs all 47 working commits with their published ones (same author time and subject;
+46 pairs have identical trees, the 47th differs only by those four files), and `tools/rebuild.py` now fails if any
+declared commit is missing from the checkout's history both directly and through the map. The declarations
+themselves are write-once and were not edited; their S3 copies hold the same values.

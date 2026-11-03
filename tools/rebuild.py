@@ -25,6 +25,22 @@ PRICES = json.load(open(os.path.join(ROOT, "evidence", "pricing.json"), encoding
 METRIC_KEY = {"exact_match": "accuracy", "accuracy_rel2pct": "accuracy", "accuracy_gsma_rule": "accuracy", "accuracy_rel5pct": "accuracy_loose_5pct"}
 
 
+def check_declared_commits(errors):
+    """Every declaration's git_commit must be in this checkout's history, directly or through
+    evidence/commit_map.json (the published history was rewritten once; see that file)."""
+    import glob
+    import subprocess
+    if subprocess.run(["git", "-C", ROOT, "rev-parse", "HEAD"], capture_output=True).returncode != 0:
+        return "not a git checkout: declared commits not checked"
+    mapping = json.load(open(os.path.join(ROOT, "evidence", "commit_map.json"), encoding="utf-8"))["working_to_published"]
+    on_head = lambda c: subprocess.run(["git", "-C", ROOT, "merge-base", "--is-ancestor", c, "HEAD"], capture_output=True).returncode == 0
+    commits = {json.load(open(p, encoding="utf-8")).get("git_commit") for p in glob.glob(os.path.join(ROOT, "evidence", "declared", "*.json"))}
+    for c in sorted(filter(None, commits)):
+        if not (on_head(c) or (c in mapping and on_head(mapping[c]))):
+            errors.append(f"declared git_commit {c} is not in this history (directly or via evidence/commit_map.json)")
+    return f"{len(commits)} declared commits found in this history"
+
+
 def check_one(t, summary):
     value = summary.get(METRIC_KEY.get(t["metric"], t["metric"]))
     if value is None:
@@ -196,13 +212,15 @@ def main():
             json.dump(card, f, indent=2)
         with open(os.path.join(ROOT, "reports", "scorecard.md"), "w", encoding="utf-8", newline="\n") as f:
             f.write(text + "\n\nRebuild: `python tools/rebuild.py` (no AWS access; exits 1 if any evidence changed).\n")
+    commits_note = check_declared_commits(errors)
     if errors:
         print("\nERRORS:\n" + "\n".join(errors))
         sys.exit(1)
     s3_only = [r for r in runs.get("s3_only_records", [])
                if not os.path.exists(os.path.join(ROOT, "evidence", "records", r, "records.jsonl"))]
     note = f" ({len(s3_only)} official-TeleMath runs reported from summary.json; records in S3 only)" if s3_only else ""
-    print("\nrebuild OK: every committed record re-graded and matched; test-set hashes match declarations" + note)
+    print("\nrebuild OK: every committed record re-graded and matched; test-set hashes match declarations; "
+          + commits_note + note)
 
 
 if __name__ == "__main__":
