@@ -1,6 +1,6 @@
 {
   "primary_track": "track-1",
-  "_todo": "team07: confirm the primary track. If Track 3 is primary, keep this as the Track 1 secondary entry (copied to s3://<bucket>/judging/track-1/judging.json) and do not copy it over judging/judging.json.",
+  "_primary_note": "Confirmed by team07 on 2026-11-03: Track 1 is the primary entry. This file is s3://bb26-p-team07-data-041915167631-use2/judging/judging.json; the earlier Track 3 file is kept at judging/track-3/judging.json.",
   "team_code": "team07",
   "repository_path": "nlm-track1/",
   "evidence": {

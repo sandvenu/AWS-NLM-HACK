@@ -1,4 +1,4 @@
-Primary track: track-1 (NLM training and production readiness), team07 <!-- TODO(team07): confirm the primary track; the team's main entry may be Track 3, which would make this repo a secondary submission -->
+Primary track: track-1 (NLM training and production readiness), team07
 
 # team07 — OTel-LLM-1.7B-IT: LoRA fine-tune with an evidence-chain scorecard
 
