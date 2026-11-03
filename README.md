@@ -44,6 +44,7 @@ Environment: `AWS_PROFILE=fyuz`, region us-east-2, Python ≥ 3.11 with `boto3` 
 | **Rebuild scorecard (no AWS)** | `python tools/rebuild.py` (`--write` to regenerate `reports/scorecard.*`) |
 | Live test (read-only) | `python tools/show_record.py --run-id <run_id> --item <item_id>` (S3 GetObject + CloudWatch Logs reads only) |
 | Grader tests | `python tests/test_grader.py` |
+| Demo walkthrough (recorded) | `python tools/demo.py` (script and narration in [DEMO.md](DEMO.md)) |
 
 ## Results
 
